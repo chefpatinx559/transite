@@ -25,52 +25,49 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader --no-interaction
 
-      # ── 4. Node + Build Vue public ───────────────────────
+      # ── 4. Build Vue public ───────────────────────────────
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Build site public (Vue + Inertia)
-        run: |
-          npm ci
-          npm run build
+        run: npm ci && npm run build
 
       # ── 5. Build Admin React ─────────────────────────────
       - name: Build admin React
+        run: cd admin && npm ci && npm run build
+
+      # ── 6. Créer archive de déploiement ──────────────────
+      - name: Create deployment archive
         run: |
-          cd admin
-          npm ci
-          npm run build
+          tar --exclude='.git' \
+              --exclude='.github' \
+              --exclude='.env' \
+              --exclude='.claude' \
+              --exclude='storage/app/public' \
+              --exclude='storage/framework/cache' \
+              --exclude='storage/framework/sessions' \
+              --exclude='storage/framework/views' \
+              --exclude='storage/logs/*.log' \
+              --exclude='admin/node_modules' \
+              --exclude='node_modules' \
+              -czf /tmp/netspring.tar.gz .
+          echo "Archive size: $(du -sh /tmp/netspring.tar.gz | cut -f1)"
 
-      # ── 6. Deploy laravel/ via rsync SSH ─────────────────
-      - name: Deploy Laravel files
-        uses: burnett01/rsync-deployments@7.0.1
+      # ── 7. Upload archive via SCP ─────────────────────────
+      - name: Upload archive to server
+        uses: appleboy/scp-action@v0.1.7
         with:
-          switches: >-
-            -avzr --delete
-            --exclude='.git'
-            --exclude='.github'
-            --exclude='.env'
-            --exclude='node_modules'
-            --exclude='admin/node_modules'
-            --exclude='admin/dist'
-            --exclude='storage/app/public'
-            --exclude='storage/framework/cache'
-            --exclude='storage/framework/sessions'
-            --exclude='storage/framework/views'
-            --exclude='storage/logs'
-            --exclude='.claude'
-          path: ./
-          remote_path: ${{ secrets.LARAVEL_PATH }}/
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_port: ${{ secrets.SSH_PORT }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: /tmp/netspring.tar.gz
+          target: /tmp/
 
-      # ── 7. Copier public/ → public_html/ ────────────────
-      - name: Sync public assets to public_html
+      # ── 8. Extraire + post-deploy ─────────────────────────
+      - name: Extract & post-deploy
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -78,37 +75,37 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Copier index.php et .htaccess modifiés
-            cp ${{ secrets.LARAVEL_PATH }}/public/index.php ${{ secrets.PUBLIC_HTML }}/index.php
-            cp ${{ secrets.LARAVEL_PATH }}/public/.htaccess ${{ secrets.PUBLIC_HTML }}/.htaccess
+            set -e
 
-            # Synchroniser les assets build
-            rsync -avz --delete ${{ secrets.LARAVEL_PATH }}/public/build/ ${{ secrets.PUBLIC_HTML }}/build/
-            rsync -avz --delete ${{ secrets.LARAVEL_PATH }}/public/admin/ ${{ secrets.PUBLIC_HTML }}/admin/
+            LARAVEL="${{ secrets.LARAVEL_PATH }}"
+            PUBLIC="${{ secrets.PUBLIC_HTML }}"
 
-            # Copier les autres fichiers publics (favicon, robots, sitemap, etc.)
-            for f in favicon.ico robots.txt; do
-              [ -f "${{ secrets.LARAVEL_PATH }}/public/$f" ] && cp ${{ secrets.LARAVEL_PATH }}/public/$f ${{ secrets.PUBLIC_HTML }}/$f
-            done
+            # Extraire l'archive
+            mkdir -p "$LARAVEL"
+            tar -xzf /tmp/netspring.tar.gz -C "$LARAVEL" --overwrite
+            rm -f /tmp/netspring.tar.gz
 
-      # ── 8. Post-deploy : migrate + cache ────────────────
-      - name: Post-deploy (migrate + cache)
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ${{ secrets.LARAVEL_PATH }}
+            # Synchroniser public/ → public_html/
+            mkdir -p "$PUBLIC"
+            cp "$LARAVEL/public/index.php" "$PUBLIC/index.php"
+            cp "$LARAVEL/public/.htaccess" "$PUBLIC/.htaccess" 2>/dev/null || true
+            cp "$LARAVEL/public/robots.txt" "$PUBLIC/robots.txt" 2>/dev/null || true
+            cp "$LARAVEL/public/favicon.ico" "$PUBLIC/favicon.ico" 2>/dev/null || true
+
+            # Assets build Vite
+            [ -d "$LARAVEL/public/build" ] && rsync -a --delete "$LARAVEL/public/build/" "$PUBLIC/build/"
+            [ -d "$LARAVEL/public/admin" ] && rsync -a --delete "$LARAVEL/public/admin/" "$PUBLIC/admin/"
+
+            # Permissions
+            chmod -R 775 "$LARAVEL/storage"
+            chmod -R 775 "$LARAVEL/bootstrap/cache"
 
             # Storage symlink
-            php8.3 artisan storage:link --force || true
+            cd "$LARAVEL"
+            php8.3 artisan storage:link --force 2>/dev/null || true
 
-            # Migrations
+            # Migrations + seed admins
             php8.3 artisan migrate --force
-
-            # Seeder admins
             php8.3 artisan db:seed --class=AdminSeeder --force
 
             # Cache
@@ -116,4 +113,4 @@ jobs:
             php8.3 artisan route:cache
             php8.3 artisan view:cache
 
-            echo "✅ Déploiement terminé !"
+            echo "✅ Déploiement NETSPRING terminé !"
