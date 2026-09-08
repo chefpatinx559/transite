@@ -30,3 +30,4 @@ Homestead.yaml
 Thumbs.db
 admin/node_modules
 admin/dist
+.claude/
