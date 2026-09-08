@@ -84,18 +84,23 @@ jobs:
 
             cd "$LARAVEL"
 
+            # Détecter le bon binaire PHP (Hostinger peut utiliser php, php8.3, php83...)
+            PHP=$(which php8.3 2>/dev/null || which php83 2>/dev/null || which php8 2>/dev/null || which php 2>/dev/null)
+            echo "PHP binary: $PHP"
+            $PHP -v | head -1
+
             # Storage symlink
-            php8.3 artisan storage:link --force 2>/dev/null || true
+            $PHP artisan storage:link --force 2>/dev/null || true
 
             # Migrations
-            php8.3 artisan migrate --force
+            $PHP artisan migrate --force
 
             # Seed admins
-            php8.3 artisan db:seed --class=AdminSeeder --force
+            $PHP artisan db:seed --class=AdminSeeder --force
 
             # Cache
-            php8.3 artisan config:cache
-            php8.3 artisan route:cache
-            php8.3 artisan view:cache
+            $PHP artisan config:cache
+            $PHP artisan route:cache
+            $PHP artisan view:cache
 
             echo "✅ NETSPRING déployé avec succès !"
