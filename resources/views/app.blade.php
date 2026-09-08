@@ -26,6 +26,13 @@
         <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés.">
         <meta name="twitter:image" content="https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg">
 
+        {{-- Favicons --}}
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+
         <title inertia>NETSPRING</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
