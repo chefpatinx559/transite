@@ -1,0 +1,117 @@
+name: 🚀 Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── 2. PHP ───────────────────────────────────────────
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, mbstring, xml, bcmath, gd, zip, curl, intl
+
+      # ── 3. Composer ──────────────────────────────────────
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
+      # ── 4. Node + Build Vue public ───────────────────────
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Build site public (Vue + Inertia)
+        run: |
+          npm ci
+          npm run build
+
+      # ── 5. Build Admin React ─────────────────────────────
+      - name: Build admin React
+        run: |
+          cd admin
+          npm ci
+          npm run build
+
+      # ── 6. Deploy laravel/ via rsync SSH ─────────────────
+      - name: Deploy Laravel files
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: >-
+            -avzr
+            --delete
+            --exclude='.git'
+            --exclude='.github'
+            --exclude='.env'
+            --exclude='node_modules'
+            --exclude='admin/node_modules'
+            --exclude='admin/dist'
+            --exclude='storage/app/public'
+            --exclude='storage/framework/cache'
+            --exclude='storage/framework/sessions'
+            --exclude='storage/framework/views'
+            --exclude='storage/logs'
+            --exclude='.claude'
+          path: ./
+          remote_path: ${{ secrets.LARAVEL_PATH }}/
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # ── 7. Copier public/ → public_html/ ────────────────
+      - name: Sync public assets to public_html
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Copier index.php et .htaccess modifiés
+            cp ${{ secrets.LARAVEL_PATH }}/public/index.php ${{ secrets.PUBLIC_HTML }}/index.php
+            cp ${{ secrets.LARAVEL_PATH }}/public/.htaccess ${{ secrets.PUBLIC_HTML }}/.htaccess
+
+            # Synchroniser les assets build
+            rsync -avz --delete ${{ secrets.LARAVEL_PATH }}/public/build/ ${{ secrets.PUBLIC_HTML }}/build/
+            rsync -avz --delete ${{ secrets.LARAVEL_PATH }}/public/admin/ ${{ secrets.PUBLIC_HTML }}/admin/
+
+            # Copier les autres fichiers publics (favicon, robots, sitemap, etc.)
+            for f in favicon.ico robots.txt; do
+              [ -f "${{ secrets.LARAVEL_PATH }}/public/$f" ] && cp ${{ secrets.LARAVEL_PATH }}/public/$f ${{ secrets.PUBLIC_HTML }}/$f
+            done
+
+      # ── 8. Post-deploy : migrate + cache ────────────────
+      - name: Post-deploy (migrate + cache)
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.LARAVEL_PATH }}
+
+            # Storage symlink
+            php8.3 artisan storage:link --force || true
+
+            # Migrations
+            php8.3 artisan migrate --force
+
+            # Seeder admins
+            php8.3 artisan db:seed --class=AdminSeeder --force
+
+            # Cache
+            php8.3 artisan config:cache
+            php8.3 artisan route:cache
+            php8.3 artisan view:cache
+
+            echo "✅ Déploiement terminé !"
