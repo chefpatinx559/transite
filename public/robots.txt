@@ -1,0 +1,21 @@
+User-agent: *
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /panier
+Disallow: /checkout
+Disallow: /commande/
+Disallow: /formation/confirmation/
+Disallow: /paiement/
+Disallow: /client/
+
+Allow: /boutique
+Allow: /blog
+Allow: /formations
+Allow: /services
+Allow: /importer
+Allow: /a-propos
+Allow: /contact
+Allow: /faq
+
+Sitemap: https://netspring.ci/sitemap.xml
