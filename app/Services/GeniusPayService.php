@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 class GeniusPayService
 {
-    private string $apiKey;
-    private string $apiSecret;
-    private string $baseUrl;
+    private ?string $apiKey;
+    private ?string $apiSecret;
+    private string  $baseUrl;
 
     public function __construct()
     {
-        $this->apiKey    = config('services.geniuspay.api_key');
-        $this->apiSecret = config('services.geniuspay.api_secret');
-        $this->baseUrl   = config('services.geniuspay.base_url');
+        $this->apiKey    = config('services.geniuspay.api_key')    ?? '';
+        $this->apiSecret = config('services.geniuspay.api_secret') ?? '';
+        $this->baseUrl   = config('services.geniuspay.base_url')   ?? 'https://geniuspay.ci/api/v1/merchant';
     }
 
     /**
