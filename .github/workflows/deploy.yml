@@ -38,36 +38,23 @@ jobs:
       - name: Build admin React
         run: cd admin && npm ci && npm run build
 
-      # ── 6. Créer archive de déploiement ──────────────────
-      - name: Create deployment archive
-        run: |
-          tar --exclude='.git' \
-              --exclude='.github' \
-              --exclude='.env' \
-              --exclude='.claude' \
-              --exclude='storage/app/public' \
-              --exclude='storage/framework/cache' \
-              --exclude='storage/framework/sessions' \
-              --exclude='storage/framework/views' \
-              --exclude='storage/logs/*.log' \
-              --exclude='admin/node_modules' \
-              --exclude='node_modules' \
-              -czf /tmp/netspring.tar.gz .
-          echo "Archive size: $(du -sh /tmp/netspring.tar.gz | cut -f1)"
-
-      # ── 7. Upload archive via SCP ─────────────────────────
-      - name: Upload archive to server
+      # ── 6. Upload fichiers via SCP ────────────────────────
+      # .env est gitignore → ne sera pas uploadé (ne remplace pas le .env serveur)
+      # storage/app/public est gitignore → fichiers uploadés préservés
+      - name: Upload files to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: /tmp/netspring.tar.gz
-          target: /tmp/
+          source: "."
+          target: ${{ secrets.LARAVEL_PATH }}
+          overwrite: true
+          rm: false
 
-      # ── 8. Extraire + post-deploy ─────────────────────────
-      - name: Extract & post-deploy
+      # ── 7. Post-deploy ────────────────────────────────────
+      - name: Post-deploy (assets + migrate + cache)
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -80,32 +67,30 @@ jobs:
             LARAVEL="${{ secrets.LARAVEL_PATH }}"
             PUBLIC="${{ secrets.PUBLIC_HTML }}"
 
-            # Extraire l'archive
-            mkdir -p "$LARAVEL"
-            tar -xzf /tmp/netspring.tar.gz -C "$LARAVEL" --overwrite
-            rm -f /tmp/netspring.tar.gz
-
-            # Synchroniser public/ → public_html/
             mkdir -p "$PUBLIC"
-            cp "$LARAVEL/public/index.php" "$PUBLIC/index.php"
-            cp "$LARAVEL/public/.htaccess" "$PUBLIC/.htaccess" 2>/dev/null || true
-            cp "$LARAVEL/public/robots.txt" "$PUBLIC/robots.txt" 2>/dev/null || true
-            cp "$LARAVEL/public/favicon.ico" "$PUBLIC/favicon.ico" 2>/dev/null || true
 
-            # Assets build Vite
+            # Copier index.php + .htaccess vers public_html
+            cp "$LARAVEL/public/index.php" "$PUBLIC/index.php"
+            [ -f "$LARAVEL/public/.htaccess" ] && cp "$LARAVEL/public/.htaccess" "$PUBLIC/.htaccess"
+            [ -f "$LARAVEL/public/robots.txt" ] && cp "$LARAVEL/public/robots.txt" "$PUBLIC/robots.txt"
+            [ -f "$LARAVEL/public/favicon.ico" ] && cp "$LARAVEL/public/favicon.ico" "$PUBLIC/favicon.ico"
+
+            # Assets Vite
             [ -d "$LARAVEL/public/build" ] && rsync -a --delete "$LARAVEL/public/build/" "$PUBLIC/build/"
             [ -d "$LARAVEL/public/admin" ] && rsync -a --delete "$LARAVEL/public/admin/" "$PUBLIC/admin/"
 
             # Permissions
-            chmod -R 775 "$LARAVEL/storage"
-            chmod -R 775 "$LARAVEL/bootstrap/cache"
+            chmod -R 775 "$LARAVEL/storage" "$LARAVEL/bootstrap/cache"
+
+            cd "$LARAVEL"
 
             # Storage symlink
-            cd "$LARAVEL"
             php8.3 artisan storage:link --force 2>/dev/null || true
 
-            # Migrations + seed admins
+            # Migrations
             php8.3 artisan migrate --force
+
+            # Seed admins
             php8.3 artisan db:seed --class=AdminSeeder --force
 
             # Cache
@@ -113,4 +98,4 @@ jobs:
             php8.3 artisan route:cache
             php8.3 artisan view:cache
 
-            echo "✅ Déploiement NETSPRING terminé !"
+            echo "✅ NETSPRING déployé avec succès !"
