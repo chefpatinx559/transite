@@ -82,6 +82,9 @@ jobs:
             # Permissions
             chmod -R 775 "$LARAVEL/storage" "$LARAVEL/bootstrap/cache"
 
+            # Symlink storage dans public_html (images accessibles via /storage/...)
+            ln -sf "$LARAVEL/storage/app/public" "$PUBLIC/storage" 2>/dev/null || true
+
             cd "$LARAVEL"
 
             # Détecter le bon binaire PHP (Hostinger peut utiliser php, php8.3, php83...)
