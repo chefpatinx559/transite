@@ -88,6 +88,11 @@ class CheckoutController extends Controller
 
         $total = $subtotal;
 
+        // Montant minimum GeniusPay : 200 XOF
+        if ($total < 200) {
+            return back()->with('error', 'Le montant minimum de commande est de 200 FCFA.');
+        }
+
         // Créer la commande AVANT le paiement
         $order = Order::create([
             'user_id'          => Auth::id(),
