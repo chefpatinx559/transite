@@ -114,18 +114,7 @@ class CheckoutController extends Controller
         // Vider le panier
         session()->forget(self::CART_KEY);
 
-        // Email de confirmation au client
-        try {
-            Mail::to($order->customer_email)
-                ->send(new OrderConfirmation($order->load('items')));
-        } catch (\Exception $e) {
-            Log::warning('Order confirmation email failed', ['error' => $e->getMessage()]);
-        }
-
-        // Notification Telegram
-        $this->telegram->notifyNewOrder($order->load('items'));
-
-        // Appel GeniusPay
+        // Appel GeniusPay (email + Telegram envoyés dans paymentSuccess après confirmation)
         try {
             $payment = $this->geniusPay->createPayment([
                 'amount'      => (int) round($total),
@@ -177,12 +166,23 @@ class CheckoutController extends Controller
 
         $order = Order::with('items')->where('token', $token)->firstOrFail();
 
-        // Vérification optionnelle via l'API GeniusPay
-        if ($order->payment_ref) {
+        // Vérification paiement via API GeniusPay
+        if ($order->payment_ref && $order->payment_status !== 'paid') {
             try {
                 $payment = $this->geniusPay->getPayment($order->payment_ref);
                 if ($payment['status'] === 'completed') {
                     $order->update(['status' => 'paid', 'payment_status' => 'paid']);
+
+                    // Email de confirmation (seulement après paiement confirmé)
+                    try {
+                        Mail::to($order->customer_email)
+                            ->send(new OrderConfirmation($order->load('items')));
+                    } catch (\Exception $e) {
+                        Log::warning('Order confirmation email failed', ['error' => $e->getMessage()]);
+                    }
+
+                    // Telegram après paiement confirmé
+                    $this->telegram->notifyNewOrder($order->load('items'));
                 }
             } catch (\Exception $e) {
                 Log::warning('GeniusPay verification failed', ['error' => $e->getMessage()]);

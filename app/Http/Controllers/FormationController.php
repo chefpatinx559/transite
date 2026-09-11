@@ -65,23 +65,23 @@ class FormationController extends Controller
             'payment_status' => $formation->is_free ? 'paid' : 'unpaid',
         ]);
 
-        // Email de confirmation au participant
-        try {
-            Mail::to($registration->email)
-                ->send(new FormationRegistrationConfirmation($registration, $formation));
-        } catch (\Exception $e) {
-            Log::warning('Formation registration email failed', ['error' => $e->getMessage()]);
-        }
-
-        // Notification Telegram
-        $this->telegram->notifyNewFormationRegistration($registration->load('formation'));
-
-        // Formation gratuite → confirmation directe
+        // Formation gratuite → confirmation + email + Telegram immédiatement
         if ($formation->is_free) {
             $registration->update(['status' => 'confirmed']);
 
+            try {
+                Mail::to($registration->email)
+                    ->send(new FormationRegistrationConfirmation($registration, $formation));
+            } catch (\Exception $e) {
+                Log::warning('Formation registration email failed', ['error' => $e->getMessage()]);
+            }
+
+            $this->telegram->notifyNewFormationRegistration($registration->load('formation'));
+
             return redirect()->route('formation.confirmation', ['token' => $registration->token]);
         }
+
+        // Formation payante → GeniusPay (email + Telegram après paiement dans paymentSuccess)
 
         // Formation payante → GeniusPay
         try {
@@ -141,11 +141,25 @@ class FormationController extends Controller
             ->where('token', $token)->firstOrFail();
 
         // Vérification GeniusPay
-        if ($registration->payment_ref) {
+        if ($registration->payment_ref && $registration->payment_status !== 'paid') {
             try {
                 $payment = $this->geniusPay->getPayment($registration->payment_ref);
                 if ($payment['status'] === 'completed') {
                     $registration->update(['status' => 'confirmed', 'payment_status' => 'paid']);
+
+                    // Email de confirmation après paiement
+                    try {
+                        Mail::to($registration->email)
+                            ->send(new FormationRegistrationConfirmation(
+                                $registration->fresh(),
+                                $registration->formation,
+                            ));
+                    } catch (\Exception $e) {
+                        Log::warning('Formation confirmation email failed', ['error' => $e->getMessage()]);
+                    }
+
+                    // Telegram après paiement confirmé
+                    $this->telegram->notifyNewFormationRegistration($registration->load('formation'));
                 }
             } catch (\Exception $e) {
                 Log::warning('Formation payment verification failed', ['error' => $e->getMessage()]);
