@@ -40,10 +40,15 @@ function paymentBadge(status) {
                     <CheckCircle2 class="w-14 h-14 text-[#F4620A]" aria-hidden="true" />
                 </div>
                 <h1 class="font-heading font-bold text-3xl md:text-4xl text-[#0D0D0D] mb-3">
-                    Merci pour votre commande !
+                    {{ order.payment_status === 'paid' ? 'Merci pour votre commande !' : 'Commande enregistrée' }}
                 </h1>
                 <p class="text-gray-500 text-base max-w-sm">
-                    Votre commande a bien été enregistrée. Vous recevrez une confirmation par email et WhatsApp.
+                    <span v-if="order.payment_status === 'paid'">
+                        Votre paiement a été accepté. Vous recevrez une confirmation par email et WhatsApp.
+                    </span>
+                    <span v-else>
+                        Votre commande est en attente de paiement. Contactez-nous sur WhatsApp si vous avez déjà payé.
+                    </span>
                 </p>
             </div>
 

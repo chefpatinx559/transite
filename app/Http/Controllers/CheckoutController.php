@@ -151,9 +151,9 @@ class CheckoutController extends Controller
                 'error'    => $e->getMessage(),
             ]);
 
-            // Fallback : rediriger vers la confirmation (en attente de paiement)
-            return redirect()->route('order.confirmation', ['token' => $order->token])
-                ->with('warning', 'Paiement en attente. Contactez-nous si le problème persiste.');
+            // Fallback : page d'erreur paiement
+            return redirect()->route('payment.error', ['order' => $order->token])
+                ->with('error', 'Impossible d\'initier le paiement. Réessayez ou contactez-nous.');
         }
     }
 
