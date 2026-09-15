@@ -26,6 +26,7 @@ class HandleInertiaRequests extends Middleware
                 'error'   => session('error'),
             ],
             'cartCount' => $cartCount,
+            'assetUrl'  => rtrim(config('app.url'), '/'),
         ];
     }
 }

@@ -12,10 +12,11 @@ const page = usePage()
 
 const logoSrc = computed(() => {
     if (props.src) return props.src
-    const url = page.url ?? ''
-    if (url.startsWith('/formations')) return '/netspring_formation.png'
-    if (url.startsWith('/boutique'))   return '/netspring_boutique.png'
-    return '/netspring.png'
+    const base = (page.props.assetUrl ?? '').replace(/\/$/, '')
+    const url  = page.url ?? ''
+    if (url.startsWith('/formations')) return `${base}/netspring_formation.png`
+    if (url.startsWith('/boutique'))   return `${base}/netspring_boutique.png`
+    return `${base}/netspring.png`
 })
 </script>
 
