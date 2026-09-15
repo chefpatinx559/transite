@@ -278,7 +278,7 @@ const whatsappDevis = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%2
                         </a>
                         <span class="flex items-start gap-2.5">
                             <MapPin class="w-4 h-4 text-[#F4620A] flex-shrink-0 mt-0.5" aria-hidden="true" />
-                            <span>Abidjan, Côte d'Ivoire<br/><span class="text-xs text-gray-500">Lun–Ven : 08h00–19h00</span></span>
+                            <span>Bouaké, Côte d'Ivoire<br/><span class="text-xs text-gray-500">Lun–Ven : 08h00–19h00</span></span>
                         </span>
                     </address>
 

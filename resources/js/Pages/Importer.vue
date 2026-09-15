@@ -28,91 +28,45 @@ function submit() {
 const simTab = ref('maritime') // 'maritime' | 'aerien'
 
 // MARITIME
-const m = ref({ longueur: '', largeur: '', hauteur: '', quantite: 1, poids: '', valeur: '', taxe: '20' })
-const tauxDouane = [
-    { label: '0% — Intrants agricoles, médicaments', value: '0' },
-    { label: '5% — Matières premières, équipements', value: '5' },
-    { label: '10% — Produits semi-finis', value: '10' },
-    { label: '20% — Produits finis de consommation', value: '20' },
-]
-// Tarifs maritimes estimatifs Chine → Abidjan 2024
-const TARIF_CBM_FCFA   = 45000  // ~70$ × 640 FCFA/$ — fret + THC + frais docs
-const TARIF_TRANSIT_CI = 15000  // frais transit/dédouanement de base par CBM
-const TVA              = 0.18
-const TAXES_DIVERSES   = 0.025  // PCS 1% + taxe stat 1% + CEDEAO 0.5%
+const m = ref({ longueur: '', largeur: '', hauteur: '', quantite: 1 })
+const TARIF_FRET_CBM = 250_000
 
 const simMaritime = computed(() => {
     const l = parseFloat(m.value.longueur) || 0
     const w = parseFloat(m.value.largeur)  || 0
     const h = parseFloat(m.value.hauteur)  || 0
     const q = parseInt(m.value.quantite)   || 1
-    const kg = parseFloat(m.value.poids)   || 0
-    const val = parseFloat(m.value.valeur) || 0
-    const taux = parseFloat(m.value.taxe)  / 100
 
     if (!l || !w || !h) return null
 
-    const cbm = (l * w * h * q) / 1_000_000          // m³ réels
-    const poidsTonne = kg / 1000                       // tonnes
-    const cbmFacturable = Math.max(cbm, poidsTonne)    // maritime : max(volume, poids)
+    const cbm      = (l * w * h * q) / 1_000_000
+    const fretTotal = cbm * TARIF_FRET_CBM
 
-    const fretTotal   = Math.ceil(cbmFacturable) * TARIF_CBM_FCFA  // arrondi au CBM supérieur
-    const transit     = Math.max(1, Math.ceil(cbmFacturable)) * TARIF_TRANSIT_CI
-
-    // Droits & taxes CI sur valeur CIF (valeur marchandise + fret)
-    const cif         = val + fretTotal
-    const droits      = cif * taux
-    const taxesDiv    = cif * TAXES_DIVERSES
-    const tva         = (cif + droits + taxesDiv) * TVA
-    const douaneTotal = droits + taxesDiv + tva
-
-    return {
-        cbm: cbm.toFixed(3),
-        cbmFacturable: cbmFacturable.toFixed(3),
-        fretTotal,
-        transit,
-        douaneTotal: val > 0 ? douaneTotal : null,
-        total: val > 0 ? fretTotal + transit + douaneTotal : fretTotal + transit,
-        showDouane: val > 0,
-    }
+    return { cbm: cbm.toFixed(3), fretTotal }
 })
 
 // AÉRIEN
-const a = ref({ poids: '', longueur: '', largeur: '', hauteur: '', valeur: '', taxe: '20' })
-const TARIF_KG_AERIEN = 3500  // ~5.5$ × 640 FCFA/$
+const a = ref({ poids: '', longueur: '', largeur: '', hauteur: '' })
+const TARIF_AERIEN_NORMAL  = 10_000
+const TARIF_AERIEN_EXPRESS = 15_000
 
 const simAerien = computed(() => {
-    const kg  = parseFloat(a.value.poids)    || 0
-    const l   = parseFloat(a.value.longueur) || 0
-    const w   = parseFloat(a.value.largeur)  || 0
-    const h   = parseFloat(a.value.hauteur)  || 0
-    const val = parseFloat(a.value.valeur)   || 0
-    const taux = parseFloat(a.value.taxe)    / 100
+    const kg = parseFloat(a.value.poids)    || 0
+    const l  = parseFloat(a.value.longueur) || 0
+    const w  = parseFloat(a.value.largeur)  || 0
+    const h  = parseFloat(a.value.hauteur)  || 0
 
     if (!kg && !l) return null
 
-    // Poids volumétrique aérien : L×W×H (cm) / 5000
-    const poidsVol    = l && w && h ? (l * w * h) / 5000 : 0
+    const poidsVol       = l && w && h ? (l * w * h) / 5000 : 0
     const poidsFacturable = Math.max(kg, poidsVol)
-
-    const fretTotal   = poidsFacturable * TARIF_KG_AERIEN
-    const transit     = 5000 + poidsFacturable * 500 // frais fixes + variable
-
-    const cif         = val + fretTotal
-    const droits      = cif * taux
-    const taxesDiv    = cif * TAXES_DIVERSES
-    const tva         = (cif + droits + taxesDiv) * TVA
-    const douaneTotal = droits + taxesDiv + tva
 
     return {
         kg: kg.toFixed(1),
         poidsVol: poidsVol > 0 ? poidsVol.toFixed(1) : null,
         poidsFacturable: poidsFacturable.toFixed(1),
-        fretTotal,
-        transit,
-        douaneTotal: val > 0 ? douaneTotal : null,
-        total: val > 0 ? fretTotal + transit + douaneTotal : fretTotal + transit,
-        showDouane: val > 0,
+        fretNormal:  poidsFacturable * TARIF_AERIEN_NORMAL,
+        fretExpress: poidsFacturable * TARIF_AERIEN_EXPRESS,
     }
 })
 
@@ -157,7 +111,7 @@ const timeline = [
             </div>
             <!-- Stats -->
             <div class="grid grid-cols-2 gap-4">
-                <div v-for="stat in [{v:'500+',l:'Clients accompagnés'},{v:'8 ans',l:'D\'expérience'},{v:'1000+',l:'Commandes réalisées'},{v:'4.9/5',l:'Satisfaction'}]"
+                <div v-for="stat in [{v:'500+',l:'Clients accompagnés'},{v:'4 ans',l:'D\'expérience'},{v:'1000+',l:'Commandes réalisées'},{v:'4.9/5',l:'Satisfaction'}]"
                      :key="stat.v"
                      class="bg-white/5 border border-white/10 rounded-[16px] p-6 text-center hover:bg-white/8 transition-colors">
                     <p class="font-heading font-bold text-[#F4620A] text-2xl mb-1">{{ stat.v }}</p>
@@ -263,36 +217,11 @@ const timeline = [
                             </div>
                         </div>
 
-                        <!-- Quantité + poids -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label for="m-q" class="block text-xs text-gray-500 mb-1">Nombre de colis</label>
-                                <input id="m-q" v-model="m.quantite" type="number" min="1" placeholder="10"
-                                       class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                            </div>
-                            <div>
-                                <label for="m-kg" class="block text-xs text-gray-500 mb-1">Poids total (kg)</label>
-                                <input id="m-kg" v-model="m.poids" type="number" min="1" placeholder="500"
-                                       class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                            </div>
-                        </div>
-
-                        <!-- Valeur marchandise (optionnel) -->
+                        <!-- Nombre de colis -->
                         <div>
-                            <label for="m-val" class="block text-xs text-gray-500 mb-1">
-                                Valeur marchandise (FCFA) <span class="text-gray-600">— optionnel, pour estimer les taxes</span>
-                            </label>
-                            <input id="m-val" v-model="m.valeur" type="number" min="0" placeholder="1 500 000"
+                            <label for="m-q" class="block text-xs text-gray-500 mb-1">Nombre de colis</label>
+                            <input id="m-q" v-model="m.quantite" type="number" min="1" placeholder="10"
                                    class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                        </div>
-
-                        <!-- Taux douane -->
-                        <div v-if="m.valeur">
-                            <label for="m-taxe" class="block text-xs text-gray-500 mb-1">Taux douane (TEC CEDEAO)</label>
-                            <select id="m-taxe" v-model="m.taxe"
-                                    class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A]">
-                                <option v-for="t in tauxDouane" :key="t.value" :value="t.value" class="bg-[#0D0D0D]">{{ t.label }}</option>
-                            </select>
                         </div>
                     </div>
 
@@ -309,43 +238,25 @@ const timeline = [
                             <!-- Volume calculé -->
                             <div class="bg-white/5 rounded-[12px] p-4 space-y-1.5 text-sm">
                                 <div class="flex justify-between text-gray-400">
-                                    <span>Volume réel</span>
-                                    <span class="text-white font-medium">{{ simMaritime.cbm }} m³</span>
-                                </div>
-                                <div class="flex justify-between text-gray-400">
-                                    <span>Volume facturable <span class="text-xs">(max volume/poids)</span></span>
-                                    <span class="text-[#F4620A] font-bold">{{ simMaritime.cbmFacturable }} m³</span>
+                                    <span>CBM total</span>
+                                    <span class="text-[#F4620A] font-bold">{{ simMaritime.cbm }} m³</span>
                                 </div>
                             </div>
 
                             <!-- Détail des coûts -->
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between text-gray-300">
-                                    <span>Fret maritime Chine → Abidjan</span>
+                                    <span>Fret maritime (45 à 60 jours)</span>
                                     <span>{{ fmt(simMaritime.fretTotal) }}</span>
                                 </div>
-                                <div class="flex justify-between text-gray-300">
-                                    <span>Transit & dédouanement CI</span>
-                                    <span>{{ fmt(simMaritime.transit) }}</span>
-                                </div>
-                                <template v-if="simMaritime.showDouane">
-                                    <div class="border-t border-white/10 my-2"></div>
-                                    <div class="flex justify-between text-gray-300">
-                                        <span>Droits & taxes douane CI</span>
-                                        <span>{{ fmt(simMaritime.douaneTotal) }}</span>
-                                    </div>
-                                </template>
                             </div>
 
                             <!-- Total -->
                             <div class="border-t border-[#F4620A]/30 pt-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-white font-semibold text-sm">TOTAL ESTIMÉ</span>
-                                    <span class="font-heading font-bold text-[#F4620A] text-xl">{{ fmt(simMaritime.total) }}</span>
+                                    <span class="font-heading font-bold text-[#F4620A] text-xl">{{ fmt(simMaritime.fretTotal) }}</span>
                                 </div>
-                                <p v-if="!simMaritime.showDouane" class="text-gray-500 text-xs mt-1">
-                                    Hors droits de douane — renseignez la valeur marchandise pour les inclure
-                                </p>
                             </div>
 
                             <!-- CTA -->
@@ -359,7 +270,7 @@ const timeline = [
                         <!-- Note info -->
                         <div class="mt-4 flex gap-2 text-xs text-gray-600 items-start">
                             <Info class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                            <p>Tarif indicatif LCL (groupage) Chine→Abidjan. Basé sur ~45 000 FCFA/m³ tout compris. Les prix réels varient selon la saison, le port d'embarquement et le type de marchandise.</p>
+                            <p>Tarif indicatif CBM × 250 000 FCFA. Les prix réels varient selon la saison, le port d'embarquement et le type de marchandise.</p>
                         </div>
                     </div>
                 </div>
@@ -406,21 +317,6 @@ const timeline = [
                             <p class="text-gray-600 text-xs mt-2">Formule aérien : L×W×H (cm) ÷ 5 000 = poids volumétrique (kg)</p>
                         </div>
 
-                        <div>
-                            <label for="a-val" class="block text-xs text-gray-500 mb-1">
-                                Valeur marchandise (FCFA) <span class="text-gray-600">— optionnel</span>
-                            </label>
-                            <input id="a-val" v-model="a.valeur" type="number" min="0" placeholder="800 000"
-                                   class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                        </div>
-
-                        <div v-if="a.valeur">
-                            <label for="a-taxe" class="block text-xs text-gray-500 mb-1">Taux douane</label>
-                            <select id="a-taxe" v-model="a.taxe"
-                                    class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A]">
-                                <option v-for="t in tauxDouane" :key="t.value" :value="t.value" class="bg-[#0D0D0D]">{{ t.label }}</option>
-                            </select>
-                        </div>
                     </div>
 
                     <!-- Résultat aérien -->
@@ -452,31 +348,21 @@ const timeline = [
                             <!-- Détail -->
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between text-gray-300">
-                                    <span>Fret aérien Chine → Abidjan</span>
-                                    <span>{{ fmt(simAerien.fretTotal) }}</span>
+                                    <span>Fret aérien normal <span class="text-xs text-gray-500">(3 semaines max)</span></span>
+                                    <span>{{ fmt(simAerien.fretNormal) }}</span>
                                 </div>
                                 <div class="flex justify-between text-gray-300">
-                                    <span>Transit & frais aéroportuaires</span>
-                                    <span>{{ fmt(simAerien.transit) }}</span>
+                                    <span>Fret aérien express <span class="text-xs text-gray-500">(1 semaine max)</span></span>
+                                    <span>{{ fmt(simAerien.fretExpress) }}</span>
                                 </div>
-                                <template v-if="simAerien.showDouane">
-                                    <div class="border-t border-white/10 my-2"></div>
-                                    <div class="flex justify-between text-gray-300">
-                                        <span>Droits & taxes douane CI</span>
-                                        <span>{{ fmt(simAerien.douaneTotal) }}</span>
-                                    </div>
-                                </template>
                             </div>
 
                             <!-- Total -->
                             <div class="border-t border-[#F4620A]/30 pt-4">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-white font-semibold text-sm">TOTAL ESTIMÉ</span>
-                                    <span class="font-heading font-bold text-[#F4620A] text-xl">{{ fmt(simAerien.total) }}</span>
+                                    <span class="text-white font-semibold text-sm">NORMAL ESTIMÉ</span>
+                                    <span class="font-heading font-bold text-[#F4620A] text-xl">{{ fmt(simAerien.fretNormal) }}</span>
                                 </div>
-                                <p v-if="!simAerien.showDouane" class="text-gray-500 text-xs mt-1">
-                                    Hors droits de douane — renseignez la valeur marchandise pour les inclure
-                                </p>
                             </div>
 
                             <a href="#formulaire"
@@ -488,7 +374,7 @@ const timeline = [
 
                         <div class="mt-4 flex gap-2 text-xs text-gray-600 items-start">
                             <Info class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                            <p>Tarif indicatif fret aérien Chine→Abidjan. Basé sur ~3 500 FCFA/kg. Les tarifs varient selon la compagnie, le volume total et la nature des marchandises.</p>
+                            <p>Normal : poids × 10 000 FCFA (3 sem. max) · Express : poids × 15 000 FCFA (1 sem. max). Les tarifs varient selon la compagnie et la nature des marchandises.</p>
                         </div>
                     </div>
                 </div>

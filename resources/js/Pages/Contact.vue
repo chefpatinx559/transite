@@ -15,7 +15,7 @@ function submit() {
 const contacts = [
     { icon: Phone,   label: 'Téléphone / WhatsApp', value: '+225 0594429552',             href: 'https://wa.me/2250594429552' },
     { icon: Mail,    label: 'Email',                value: 'netspringbusiness@gmail.com', href: 'mailto:netspringbusiness@gmail.com' },
-    { icon: MapPin,  label: 'Adresse',              value: 'Abidjan, Côte d\'Ivoire',      href: null },
+    { icon: MapPin,  label: 'Adresse',              value: 'Bouaké, Côte d\'Ivoire',       href: null },
     { icon: Clock,   label: 'Horaires',             value: 'Lun–Ven : 08h00–19h00',        href: null },
 ]
 </script>
