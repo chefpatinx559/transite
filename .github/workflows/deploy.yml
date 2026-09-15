@@ -12,7 +12,7 @@ jobs:
     steps:
       # ── 1. Checkout ──────────────────────────────────────
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # ── 2. PHP ───────────────────────────────────────────
       - name: Setup PHP 8.3
@@ -27,7 +27,7 @@ jobs:
 
       # ── 4. Build Vue public ───────────────────────────────
       - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
 
@@ -42,7 +42,7 @@ jobs:
       # .env est gitignore → ne sera pas uploadé (ne remplace pas le .env serveur)
       # storage/app/public est gitignore → fichiers uploadés préservés
       - name: Upload files to server
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
