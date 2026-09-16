@@ -84,7 +84,7 @@ const whatsappDevis = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%2
 
             <!-- Logo -->
             <Link href="/" aria-label="NETSPRING — Retour à l'accueil" class="flex-shrink-0 hover:opacity-90 transition-opacity duration-150">
-                <Logo :dark="true" :size="36" />
+                <Logo :dark="true" :size="52" />
             </Link>
 
             <!-- Nav desktop -->

@@ -25,7 +25,7 @@ const logoSrc = computed(() => {
 <template>
     <div
         v-if="dark"
-        :style="{ display: 'inline-flex', background: 'white', borderRadius: '8px', padding: '4px' }"
+        :style="{ display: 'inline-flex', background: 'white', borderRadius: '10px', padding: '8px' }"
     >
         <img
             :src="logoSrc"
