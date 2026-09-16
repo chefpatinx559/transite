@@ -2,6 +2,8 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { ArrowRight, Target, Heart, Globe, Lightbulb, CheckCircle2, Users } from 'lucide-vue-next'
+import imgElise  from '../../images/elise.png'
+import imgIdriss from '../../images/idriss.png'
 
 const values = [
     { icon: Target,     title: 'Excellence',       desc: 'Nous visons la qualité à chaque étape, du sourcing jusqu\'à la livraison.' },
@@ -117,8 +119,8 @@ const teamStats = [
 
                 <!-- OUATTARA Elysée -->
                 <article class="bg-white rounded-[20px] p-8 border border-[#E5E7EB] hover:border-[#F4620A]/30 hover:shadow-[0_8px_32px_rgba(244,98,10,0.08)] transition-all duration-[220ms] text-center">
-                    <div class="w-20 h-20 rounded-full bg-[#F4620A] flex items-center justify-center mx-auto mb-5 shadow-[0_4px_20px_rgba(244,98,10,0.35)]">
-                        <span class="font-heading font-bold text-white text-2xl">EO</span>
+                    <div class="w-20 h-20 rounded-full mx-auto mb-5 overflow-hidden shadow-[0_4px_20px_rgba(244,98,10,0.35)]">
+                        <img :src="imgElise" alt="OUATTARA Elysée" class="w-full h-full object-cover" />
                     </div>
                     <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">OUATTARA Elysée</h3>
                     <p class="text-[#F4620A] text-sm font-semibold mt-1 mb-4">Fondateur & Manager général</p>
@@ -129,8 +131,8 @@ const teamStats = [
 
                 <!-- KASSAMBA Ben Idriss Diaby -->
                 <article class="bg-white rounded-[20px] p-8 border border-[#E5E7EB] hover:border-[#F4620A]/30 hover:shadow-[0_8px_32px_rgba(244,98,10,0.08)] transition-all duration-[220ms] text-center">
-                    <div class="w-20 h-20 rounded-full bg-[#0D0D0D] border-2 border-[#F4620A] flex items-center justify-center mx-auto mb-5">
-                        <span class="font-heading font-bold text-white text-2xl">KB</span>
+                    <div class="w-20 h-20 rounded-full mx-auto mb-5 overflow-hidden shadow-[0_4px_20px_rgba(244,98,10,0.35)]">
+                        <img :src="imgIdriss" alt="KASSAMBA Ben Idriss Diaby" class="w-full h-full object-cover" />
                     </div>
                     <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">KASSAMBA Ben Idriss Diaby</h3>
                     <p class="text-[#F4620A] text-sm font-semibold mt-1 mb-4">Directeur Exécutif</p>
