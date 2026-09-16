@@ -23,7 +23,19 @@ const logoSrc = computed(() => {
 </script>
 
 <template>
+    <div
+        v-if="dark"
+        :style="{ display: 'inline-flex', background: 'white', borderRadius: '8px', padding: '4px' }"
+    >
+        <img
+            :src="logoSrc"
+            alt="NETSPRING"
+            :style="{ height: `${size}px`, width: 'auto' }"
+            class="object-contain"
+        />
+    </div>
     <img
+        v-else
         :src="logoSrc"
         alt="NETSPRING"
         :style="{ height: `${size}px`, width: 'auto' }"
