@@ -82,7 +82,7 @@ const teamStats = [
                                     <span class="font-heading font-bold text-white text-lg">EO</span>
                                 </div>
                                 <div>
-                                    <p class="font-heading font-bold text-white">OUATTARA Elysée</p>
+                                    <p class="font-heading font-bold text-white"> Elysée OUATTARA</p>
                                     <p class="text-[#F4620A] text-xs font-semibold mt-0.5">Fondateur & Manager général</p>
                                 </div>
                             </div>
