@@ -9,6 +9,7 @@ use App\Mail\OrderConfirmation;
 use App\Services\GeniusPayService;
 use App\Services\TelegramService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function process(Request $request): RedirectResponse
+    public function process(Request $request): RedirectResponse|HttpResponse
     {
         $cart = session(self::CART_KEY, []);
 

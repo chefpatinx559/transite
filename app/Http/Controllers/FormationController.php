@@ -10,6 +10,7 @@ use App\Services\TelegramService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,7 @@ class FormationController extends Controller
         ]);
     }
 
-    public function register(Request $request, string $slug): RedirectResponse
+    public function register(Request $request, string $slug): RedirectResponse|HttpResponse
     {
         $formation = Formation::published()->where('slug', $slug)->firstOrFail();
 
