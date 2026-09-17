@@ -40,8 +40,8 @@ const nav = [
     { label: 'Contact',      href: '/contact' },
 ]
 
-const whatsappUrl   = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20avoir%20plus%20d%27informations.'
-const whatsappDevis = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis%20pour%20mon%20projet%20d%27importation.'
+const whatsappUrl   = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20avoir%20plus%20d%27informations.'
+const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis%20pour%20mon%20projet%20d%27importation.'
 </script>
 
 <template>

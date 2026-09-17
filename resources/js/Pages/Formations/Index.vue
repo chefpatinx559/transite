@@ -142,7 +142,7 @@ function coverUrl(path) {
             <h2 class="font-heading font-bold text-white text-2xl mb-3">Une question sur nos formations ?</h2>
             <p class="text-orange-100 mb-7">Contactez-nous sur WhatsApp, nous répondons rapidement.</p>
             <a
-                href="https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20j%27ai%20une%20question%20sur%20vos%20formations."
+                href="https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20j%27ai%20une%20question%20sur%20vos%20formations."
                 target="_blank" rel="noopener"
                 class="inline-flex items-center gap-2 bg-white text-[#F4620A] font-bold px-7 py-3.5 rounded-[12px] hover:bg-orange-50 transition-all duration-[220ms] shadow-[0_4px_20px_rgba(0,0,0,0.1)]"
             >

@@ -36,7 +36,7 @@ const props = defineProps({
                     Retour à la boutique
                 </Link>
                 <a
-                    :href="`https://wa.me/2250594429552?text=Bonjour NETSPRING, mon paiement pour la commande ${order.order_number} a échoué. Pouvez-vous m'aider ?`"
+                    :href="`https://wa.me/2250712328489?text=Bonjour NETSPRING, mon paiement pour la commande ${order.order_number} a échoué. Pouvez-vous m'aider ?`"
                     target="_blank"
                     rel="noopener"
                     class="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3.5 px-8 rounded-[12px] transition-all duration-[220ms] cursor-pointer"

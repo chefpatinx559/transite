@@ -147,7 +147,7 @@ function share() {
                             NETSPRING vous accompagne de la recherche fournisseur à la livraison en Côte d'Ivoire.
                         </p>
                         <a
-                            href="https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis."
+                            href="https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis."
                             target="_blank"
                             rel="noopener"
                             class="inline-flex items-center gap-2 bg-[#F4620A] hover:bg-[#d45208] text-white font-semibold px-7 py-3.5 rounded-[12px] transition-all duration-[220ms] shadow-[0_4px_16px_rgba(244,98,10,0.3)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
@@ -182,7 +182,7 @@ function share() {
                             Votre partenaire pour importer depuis la Chine en toute sécurité. Sourcing, transport, dédouanement.
                         </p>
                         <a
-                            href="https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis."
+                            href="https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis."
                             target="_blank"
                             rel="noopener"
                             class="flex items-center justify-center gap-2 bg-[#F4620A] hover:bg-[#d45208] text-white text-sm font-semibold py-2.5 px-5 rounded-[10px] transition-colors cursor-pointer"

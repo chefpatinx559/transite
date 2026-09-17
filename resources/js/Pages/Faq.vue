@@ -118,7 +118,7 @@ function toggle(id) {
                 <h2 class="font-heading font-bold text-[#0D0D0D] text-xl mb-2">Vous ne trouvez pas votre réponse ?</h2>
                 <p class="text-gray-500 mb-6">Notre équipe répond à toutes vos questions par WhatsApp ou email.</p>
                 <div class="flex flex-wrap gap-3 justify-center">
-                    <a href="https://wa.me/2250594429552" target="_blank" rel="noopener"
+                    <a href="https://wa.me/2250712328489" target="_blank" rel="noopener"
                        class="inline-flex items-center gap-2 bg-[#F4620A] hover:bg-[#d45208] text-white font-semibold px-6 py-3 rounded-[12px] transition-all duration-[220ms] cursor-pointer"
                        aria-label="Poser une question sur WhatsApp">
                         Poser une question

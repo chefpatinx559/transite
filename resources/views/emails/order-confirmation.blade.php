@@ -107,7 +107,7 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td align="center">
-                                    <a href="https://wa.me/2250594429552?text=Bonjour+NETSPRING,+j%27ai+une+question+sur+ma+commande+%23{{ $order->order_number }}."
+                                    <a href="https://wa.me/2250712328489?text=Bonjour+NETSPRING,+j%27ai+une+question+sur+ma+commande+%23{{ $order->order_number }}."
                                        style="display:inline-block;background:#25D366;color:#ffffff;font-size:14px;font-weight:700;padding:14px 32px;border-radius:10px;text-decoration:none;">
                                         💬 Suivre ma commande sur WhatsApp
                                     </a>

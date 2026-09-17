@@ -105,7 +105,7 @@ function formatPrice(val) {
                     Voir d'autres formations
                 </Link>
                 <a
-                    :href="`https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20viens%20de%20m%27inscrire%20à%20la%20formation%20${encodeURIComponent(formation.title)}.`"
+                    :href="`https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20viens%20de%20m%27inscrire%20à%20la%20formation%20${encodeURIComponent(formation.title)}.`"
                     target="_blank" rel="noopener"
                     class="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3.5 rounded-[12px] transition-all duration-[220ms] cursor-pointer">
                     <MessageCircle class="w-4.5 h-4.5" aria-hidden="true" />

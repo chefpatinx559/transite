@@ -32,7 +32,7 @@ function whatsappOrder() {
     const text = encodeURIComponent(
         `Bonjour NETSPRING, je souhaite commander : ${props.product.name} (x${quantity.value}) — ${formatPrice(props.product.price * quantity.value)}`
     )
-    window.open(`https://wa.me/2250594429552?text=${text}`, '_blank', 'noopener')
+    window.open(`https://wa.me/2250712328489?text=${text}`, '_blank', 'noopener')
 }
 
 function addRelatedToCart(product) {

@@ -13,7 +13,7 @@ function submit() {
 }
 
 const contacts = [
-    { icon: Phone,   label: 'Téléphone / WhatsApp', value: '+225 0712328489',             href: 'https://wa.me/2250594429552' },
+    { icon: Phone,   label: 'Téléphone / WhatsApp', value: '+225 0712328489',             href: 'https://wa.me/2250712328489' },
     { icon: Mail,    label: 'Email',                value: 'netspringbusiness@gmail.com', href: 'mailto:netspringbusiness@gmail.com' },
     { icon: MapPin,  label: 'Adresse',              value: 'Bouaké, Côte d\'Ivoire',       href: null },
     { icon: Clock,   label: 'Horaires',             value: 'Lun–Ven : 08h00–19h00',        href: null },
@@ -108,7 +108,7 @@ const contacts = [
                     </ul>
 
                     <!-- WhatsApp direct -->
-                    <a href="https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20j%27ai%20une%20question."
+                    <a href="https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20j%27ai%20une%20question."
                        target="_blank" rel="noopener"
                        class="flex items-center gap-3 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold px-6 py-4 rounded-[14px] transition-all duration-[220ms] shadow-[0_4px_16px_rgba(37,211,102,0.4)] hover:-translate-y-0.5 cursor-pointer"
                        aria-label="Nous écrire directement sur WhatsApp">

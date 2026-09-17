@@ -7,7 +7,7 @@ import {
     Clock, Globe, TrendingUp, Award,
 } from 'lucide-vue-next'
 
-const whatsappDevis = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis.'
+const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis.'
 
 const services = [
     {

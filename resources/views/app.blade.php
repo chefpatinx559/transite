@@ -74,7 +74,7 @@
                 "closes": "18:00"
             },
             "sameAs": [
-                "https://wa.me/2250594429552"
+                "https://wa.me/2250712328489"
             ]
         }
         </script>
