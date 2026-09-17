@@ -148,7 +148,7 @@ class CheckoutController extends Controller
             // Vider le panier seulement après redirection réussie vers GeniusPay
             session()->forget(self::CART_KEY);
 
-            return redirect($checkoutUrl);
+            return Inertia::location($checkoutUrl);
 
         } catch (\Exception $e) {
             Log::error('GeniusPay checkout error', [

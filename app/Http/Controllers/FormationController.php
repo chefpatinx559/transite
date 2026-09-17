@@ -110,7 +110,7 @@ class FormationController extends Controller
                 throw new \RuntimeException('Aucune URL de paiement retournée par GeniusPay');
             }
 
-            return redirect($checkoutUrl);
+            return Inertia::location($checkoutUrl);
 
         } catch (\Exception $e) {
             Log::error('GeniusPay formation error', ['error' => $e->getMessage()]);
