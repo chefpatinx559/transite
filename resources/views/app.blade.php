@@ -46,8 +46,8 @@
         {{-- Schema.org LocalBusiness --}}
         <script type="application/ld+json">
         {
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
+            "@@context": "https://schema.org",
+            "@@type": "LocalBusiness",
             "name": "NETSPRING",
             "description": "Pont commercial entre la Chine et la Côte d'Ivoire. Importation, sourcing, contrôle qualité, transport et formations.",
             "url": "https://netspring.business",
@@ -58,17 +58,17 @@
             "priceRange": "$$",
             "currenciesAccepted": "XOF",
             "address": {
-                "@type": "PostalAddress",
+                "@@type": "PostalAddress",
                 "streetAddress": "Bouaké",
                 "addressLocality": "Bouaké",
                 "addressCountry": "CI"
             },
             "areaServed": [
-                { "@type": "Country", "name": "Côte d'Ivoire" },
-                { "@type": "Country", "name": "China" }
+                { "@@type": "Country", "name": "Côte d'Ivoire" },
+                { "@@type": "Country", "name": "China" }
             ],
             "openingHoursSpecification": {
-                "@type": "OpeningHoursSpecification",
+                "@@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
                 "opens": "08:00",
                 "closes": "18:00"
