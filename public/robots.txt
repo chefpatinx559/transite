@@ -18,4 +18,4 @@ Allow: /a-propos
 Allow: /contact
 Allow: /faq
 
-Sitemap: https://netspring.ci/sitemap.xml
+Sitemap: https://netspring.business/sitemap.xml

@@ -43,7 +43,35 @@ Route::get('/', function () {
         ->limit(4)
         ->get(['id', 'title', 'slug', 'cover_image', 'reading_time', 'published_at', 'category_id']);
 
-    return Inertia::render('Home', ['latestPosts' => $posts]);
+    // TODO: Remplacer par de vrais témoignages clients (photos, noms réels)
+    $testimonials = [
+        [
+            'name'   => 'Kouamé D.',
+            'role'   => 'Entrepreneur, Abidjan',
+            'rating' => 5,
+            'text'   => 'Grâce à NETSPRING, j\'ai pu lancer ma marque de vêtements avec les meilleurs fournisseurs de Chine. Le service est impeccable, je recommande !',
+            'avatar' => null,
+        ],
+        [
+            'name'   => 'Aissata B.',
+            'role'   => 'Importatrice, Bouaké',
+            'rating' => 5,
+            'text'   => 'Ils s\'occupent de tout, de la recherche à la livraison. Un gain de temps incroyable. Je recommande à 100%.',
+            'avatar' => null,
+        ],
+        [
+            'name'   => 'Bakary S.',
+            'role'   => 'Chef d\'entreprise, Daloa',
+            'rating' => 5,
+            'text'   => 'Une équipe professionnelle, réactive et très à l\'écoute. Merci NETSPRING pour votre accompagnement !',
+            'avatar' => null,
+        ],
+    ];
+
+    return Inertia::render('Home', [
+        'latestPosts'  => $posts,
+        'testimonials' => $testimonials,
+    ]);
 })->name('home');
 Route::get('/services', fn () => Inertia::render('Services'))->name('services');
 Route::get('/a-propos', fn () => Inertia::render('About'))->name('about');

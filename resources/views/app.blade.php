@@ -9,22 +9,24 @@
         <meta name="robots" content="index, follow">
         <link rel="canonical" href="{{ url()->current() }}">
 
-        {{-- Open Graph (overridé par les pages via @inertiaHead) --}}
+        {{-- Open Graph (surcharge possible depuis chaque page via @inertiaHead) --}}
         <meta property="og:site_name" content="NETSPRING">
         <meta property="og:locale" content="fr_CI">
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire">
-        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2018.">
-        <meta property="og:image" content="https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg">
+        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022.">
+        {{-- TODO: Remplacer og-image.png par une vraie photo (équipe, locaux, produits) 1200x630px --}}
+        <meta property="og:image" content="{{ asset('og-image.png') }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="NETSPRING — Commerce Chine vers Côte d'Ivoire">
 
         {{-- Twitter / X --}}
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="NETSPRING — Chine – Côte d'Ivoire">
         <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés.">
-        <meta name="twitter:image" content="https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg">
+        <meta name="twitter:image" content="{{ asset('og-image.png') }}">
 
         {{-- Favicons --}}
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
@@ -40,6 +42,42 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @inertiaHead
+
+        {{-- Schema.org LocalBusiness --}}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "NETSPRING",
+            "description": "Pont commercial entre la Chine et la Côte d'Ivoire. Importation, sourcing, contrôle qualité, transport et formations.",
+            "url": "https://netspring.business",
+            "logo": "{{ asset('android-chrome-512x512.png') }}",
+            "image": "{{ asset('og-image.png') }}",
+            "telephone": "+2250594429552",
+            "email": "contact@netspring.business",
+            "priceRange": "$$",
+            "currenciesAccepted": "XOF",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Bouaké",
+                "addressLocality": "Bouaké",
+                "addressCountry": "CI"
+            },
+            "areaServed": [
+                { "@type": "Country", "name": "Côte d'Ivoire" },
+                { "@type": "Country", "name": "China" }
+            ],
+            "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+                "opens": "08:00",
+                "closes": "18:00"
+            },
+            "sameAs": [
+                "https://wa.me/2250594429552"
+            ]
+        }
+        </script>
     </head>
     <body class="font-sans antialiased">
         @inertia

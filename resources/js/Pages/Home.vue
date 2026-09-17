@@ -1,62 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useReveal } from '@/composables/useReveal'
+import SocialProof from '@/Components/SocialProof.vue'
+import BlogPreview from '@/Components/BlogPreview.vue'
 
 useReveal()
 
 const props = defineProps({
-    latestPosts: { type: Array, default: () => [] },
+    latestPosts:  { type: Array, default: () => [] },
+    testimonials: { type: Array, default: () => [] },
 })
+
 import {
-    Globe, Ship, Newspaper, ArrowRight, ChevronRight,
+    Globe, Ship, ArrowRight, ChevronRight,
     CheckCircle2, CircleCheck,
     Search, Handshake, ShieldCheck, Package, FileText, Users,
     Target, Shield, Eye, Zap,
-    Star, MapPin,
+    MapPin,
 } from 'lucide-vue-next'
 
 const whatsappDevis = 'https://wa.me/2250594429552?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis%20pour%20mon%20projet%20d%27importation.'
-
-// ── Stats animés ──────────────────────────────────────────────
-const stats = [
-    { target: 500,  suffix: '+',  label: 'Entrepreneurs\naccompagnés' },
-    { target: 1000, suffix: '+',  label: 'Commandes\nréalisées' },
-    { target: 15,   suffix: '+',  label: 'Pays\ndesservis' },
-    { target: 4.9,  suffix: '/5', label: 'Satisfaction\nclients' },
-]
-const displayed = ref(stats.map(() => 0))
-
-function animateCounters() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        stats.forEach((s, i) => { displayed.value[i] = s.target })
-        return
-    }
-    const duration = 1800
-    const start = performance.now()
-    function tick(now) {
-        const p = Math.min((now - start) / duration, 1)
-        const ease = 1 - Math.pow(1 - p, 4)
-        stats.forEach((s, i) => {
-            displayed.value[i] = s.target % 1 !== 0
-                ? parseFloat((s.target * ease).toFixed(1))
-                : Math.floor(s.target * ease)
-        })
-        if (p < 1) requestAnimationFrame(tick)
-        else stats.forEach((s, i) => { displayed.value[i] = s.target })
-    }
-    requestAnimationFrame(tick)
-}
-
-onMounted(() => {
-    const el = document.getElementById('stats-section')
-    if (!el) return
-    const obs = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) { animateCounters(); obs.disconnect() }
-    }, { threshold: 0.3 })
-    obs.observe(el)
-})
 
 // ── Services ──────────────────────────────────────────────────
 const services = [
@@ -79,32 +43,11 @@ const steps = [
 
 // ── Avantages ─────────────────────────────────────────────────
 const advantages = [
-    { title: 'Expertise Chine – CI',      desc: 'Connaissance approfondie des marchés, réglementations et culture d\'affaires.', icon: Target     },
-    { title: 'Sécurité des transactions', desc: 'Paiements sécurisés, fournisseurs vérifiés, contrats en ordre.',                 icon: Shield     },
-    { title: 'Transparence totale',       desc: 'Suivi en temps réel de votre commande, du sourcing à la livraison.',            icon: Eye        },
-    { title: 'Rapidité & réactivité',     desc: 'Réponse sous 24h, équipe disponible du lundi au vendredi.',                    icon: Zap        },
+    { title: 'Expertise Chine – CI',      desc: 'Connaissance approfondie des marchés, réglementations et culture d\'affaires.', icon: Target  },
+    { title: 'Sécurité des transactions', desc: 'Paiements sécurisés, fournisseurs vérifiés, contrats en ordre.',                 icon: Shield  },
+    { title: 'Transparence totale',       desc: 'Suivi en temps réel de votre commande, du sourcing à la livraison.',            icon: Eye     },
+    { title: 'Rapidité & réactivité',     desc: 'Réponse sous 24h, équipe disponible du lundi au vendredi.',                    icon: Zap     },
 ]
-
-// ── Témoignages ───────────────────────────────────────────────
-const testimonials = [
-    { name: 'Kouamé D.',  role: 'Entrepreneur, Abidjan',     rating: 5, text: 'Grâce à NETSPRING, j\'ai pu lancer ma marque de vêtements avec les meilleurs fournisseurs de Chine. Le service est impeccable, je recommande !' },
-    { name: 'Aissata B.', role: 'Importatrice, Bouaké',      rating: 5, text: 'Ils s\'occupent de tout, de la recherche à la livraison. Un gain de temps incroyable. Je recommande à 100%.' },
-    { name: 'Bakary S.',  role: "Chef d'entreprise, Daloa",  rating: 5, text: 'Une équipe professionnelle, réactive et très à l\'écoute. Merci NETSPRING pour votre accompagnement !' },
-]
-
-// ── Articles blog ─────────────────────────────────────────────
-const DEFAULT_COVER = 'https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg'
-
-function coverUrl(path) {
-    if (!path) return DEFAULT_COVER
-    if (path.startsWith('http')) return path
-    return '/storage/' + path
-}
-
-function formatDate(dateStr) {
-    if (!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-}
 
 const importChecklist = [
     'Recherche de produits', 'Recherche de fournisseurs', 'Négociation des prix',
@@ -185,11 +128,16 @@ const formationChecklist = [
             </div>
 
             <!-- Visuel droit -->
+            <!--
+                TODO: Remplacer ce bloc par une vraie photo authentique (équipe NETSPRING,
+                marchandises, entrepôt, Bouaké) — 800x600px WebP, importée via Vite.
+                Image recommandée : resources/images/hero-netspring.webp
+            -->
             <div class="relative hidden lg:block">
                 <div
                     class="relative rounded-[20px] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)] aspect-[4/3] bg-[#0D0D0D]"
                     role="img"
-                    aria-label="Illustration commerce Chine vers Côte d'Ivoire : port de conteneurs et logistique"
+                    aria-label="Commerce Chine vers Côte d'Ivoire — NETSPRING"
                 >
                     <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#0D0D0D] to-[#2d1a0a] flex flex-col items-center justify-center p-10 text-white">
                         <Ship class="w-20 h-20 text-[#F4620A] mb-4" aria-hidden="true" />
@@ -251,7 +199,6 @@ const formationChecklist = [
     ══════════════════════════════════════════════════ -->
     <section aria-labelledby="services-heading" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6">
-
             <div class="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
 
                 <!-- Texte gauche fixe -->
@@ -455,145 +402,16 @@ const formationChecklist = [
     </section>
 
     <!-- ══════════════════════════════════════════════════
-         CHIFFRES CLÉS
+         PREUVE SOCIALE — Stats animés + Témoignages
+         (composant SocialProof — données depuis controller)
     ══════════════════════════════════════════════════ -->
-    <section id="stats-section" aria-labelledby="stats-heading" class="noise-bg relative py-20 bg-[#0D0D0D]">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 id="stats-heading" class="sr-only">Nos chiffres clés</h2>
-            <dl class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                <div v-for="(stat, i) in stats" :key="stat.label" class="text-center">
-                    <dt class="sr-only">{{ stat.label.replace('\n', ' ') }}</dt>
-                    <dd>
-                        <p
-                            class="font-heading font-bold text-[#F4620A] leading-none mb-2"
-                            style="font-size: clamp(2.5rem, 5vw, 4rem);"
-                            role="status"
-                            :aria-label="`${displayed[i]}${stat.suffix} ${stat.label.replace('\n', ' ')}`"
-                            aria-live="polite"
-                        >
-                            {{ displayed[i] }}<span class="text-2xl">{{ stat.suffix }}</span>
-                        </p>
-                        <p class="text-gray-400 text-sm font-medium whitespace-pre-line leading-snug" aria-hidden="true">{{ stat.label }}</p>
-                    </dd>
-                </div>
-            </dl>
-        </div>
-    </section>
+    <SocialProof :testimonials="testimonials" />
 
     <!-- ══════════════════════════════════════════════════
-         TÉMOIGNAGES
+         BLOG — Aperçu des derniers articles
+         (composant BlogPreview — données depuis controller)
     ══════════════════════════════════════════════════ -->
-    <section aria-labelledby="testimonials-heading" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <header class="text-center mb-14">
-                <p class="text-[#F4620A] font-semibold text-xs tracking-[0.18em] uppercase mb-3" aria-hidden="true">TÉMOIGNAGES</p>
-                <h2 id="testimonials-heading" class="font-heading font-bold text-[#0D0D0D]" style="font-size:clamp(1.8rem,3.5vw,2.5rem);">
-                    Ils nous font confiance.
-                </h2>
-            </header>
-
-            <ul class="grid md:grid-cols-3 gap-6" role="list">
-                <li v-for="t in testimonials" :key="t.name">
-                    <article
-                        class="bg-[#FAFAFA] rounded-[16px] p-8 h-full flex flex-col hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-[220ms] border border-transparent hover:border-[#F4620A]/10"
-                        :aria-label="`Témoignage de ${t.name}, ${t.role}`"
-                    >
-                        <div class="flex gap-1 mb-5" :aria-label="`Note : ${t.rating} étoiles sur 5`">
-                            <Star v-for="n in t.rating" :key="n" class="w-4 h-4 text-[#F4620A] fill-[#F4620A]" aria-hidden="true" />
-                        </div>
-                        <blockquote class="text-gray-700 leading-[1.75] mb-6 flex-1 italic text-sm">
-                            "{{ t.text }}"
-                        </blockquote>
-                        <footer class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-[#F4620A] rounded-full flex items-center justify-center text-white font-heading font-bold text-sm flex-shrink-0" aria-hidden="true">
-                                {{ t.name.charAt(0) }}
-                            </div>
-                            <div>
-                                <cite class="not-italic font-heading font-semibold text-[#0D0D0D] text-sm block">{{ t.name }}</cite>
-                                <span class="text-gray-400 text-xs">{{ t.role }}</span>
-                            </div>
-                        </footer>
-                    </article>
-                </li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════════
-         BLOG
-    ══════════════════════════════════════════════════ -->
-    <section aria-labelledby="blog-heading" class="py-24 bg-[#FAFAFA]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-end justify-between mb-14 flex-wrap gap-4">
-                <div>
-                    <p class="text-[#F4620A] font-semibold text-xs tracking-[0.18em] uppercase mb-3" aria-hidden="true">BLOG</p>
-                    <h2 id="blog-heading" class="font-heading font-bold text-[#0D0D0D]" style="font-size:clamp(1.8rem,3.5vw,2.5rem);">
-                        Nos conseils pour développer<br class="hidden sm:block">votre business.
-                    </h2>
-                </div>
-                <Link href="/blog"
-                      class="hidden md:inline-flex items-center gap-2 text-[#F4620A] font-semibold text-sm hover:gap-3 transition-all duration-[220ms]"
-                      aria-label="Voir tous les articles du blog NETSPRING">
-                    Voir tous les articles
-                    <ArrowRight class="w-4 h-4" aria-hidden="true" />
-                </Link>
-            </div>
-
-            <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" role="list">
-                <li v-for="(post, i) in latestPosts" :key="post.id"
-                    data-reveal :data-reveal-delay="i + 1"
-                >
-                    <article class="card-lift group bg-white rounded-[16px] overflow-hidden border border-[#E5E7EB] hover:border-[#F4620A]/20 h-full flex flex-col">
-                        <!-- Image de couverture -->
-                        <div class="aspect-[16/9] relative overflow-hidden flex-shrink-0">
-                            <img
-                                :src="coverUrl(post.cover_image)"
-                                :alt="post.title"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                loading="lazy"
-                            />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" aria-hidden="true" />
-                            <div class="absolute bottom-3 left-3">
-                                <span
-                                    v-if="post.category"
-                                    class="text-white text-xs font-semibold px-2.5 py-1 rounded-full"
-                                    :style="{ backgroundColor: post.category.color || '#F4620A' }"
-                                >{{ post.category.name }}</span>
-                                <span v-else class="bg-[#F4620A] text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-                                    Blog
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-5 flex flex-col flex-1">
-                            <div class="flex items-center gap-3 text-xs text-gray-400 mb-2.5">
-                                <time :datetime="post.published_at">{{ formatDate(post.published_at) }}</time>
-                                <span aria-hidden="true">·</span>
-                                <span>{{ post.reading_time }} min de lecture</span>
-                            </div>
-                            <h3 class="font-heading font-semibold text-[#0D0D0D] text-sm leading-snug mb-4 flex-1 group-hover:text-[#F4620A] transition-colors duration-[150ms]">
-                                {{ post.title }}
-                            </h3>
-                            <Link
-                                :href="`/blog/${post.slug}`"
-                                class="text-[#F4620A] text-xs font-semibold flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-[220ms]"
-                                :aria-label="`Lire : ${post.title}`"
-                            >
-                                Lire l'article
-                                <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
-                            </Link>
-                        </div>
-                    </article>
-                </li>
-            </ul>
-
-            <div class="mt-10 text-center md:hidden">
-                <Link href="/blog" class="inline-flex items-center gap-2 text-[#F4620A] font-semibold">
-                    Voir tous les articles
-                    <ArrowRight class="w-4 h-4" aria-hidden="true" />
-                </Link>
-            </div>
-        </div>
-    </section>
+    <BlogPreview :latest-posts="latestPosts" />
 
     <!-- ══════════════════════════════════════════════════
          CTA FINAL
