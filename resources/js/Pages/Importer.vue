@@ -46,27 +46,20 @@ const simMaritime = computed(() => {
 })
 
 // AÉRIEN
-const a = ref({ poids: '', longueur: '', largeur: '', hauteur: '' })
+const a = ref({ poids: '' })
 const TARIF_AERIEN_NORMAL  = 10_000
 const TARIF_AERIEN_EXPRESS = 15_000
 
 const simAerien = computed(() => {
-    const kg = parseFloat(a.value.poids)    || 0
-    const l  = parseFloat(a.value.longueur) || 0
-    const w  = parseFloat(a.value.largeur)  || 0
-    const h  = parseFloat(a.value.hauteur)  || 0
+    const kg = parseFloat(a.value.poids) || 0
 
-    if (!kg && !l) return null
-
-    const poidsVol       = l && w && h ? (l * w * h) / 5000 : 0
-    const poidsFacturable = Math.max(kg, poidsVol)
+    if (!kg) return null
 
     return {
         kg: kg.toFixed(1),
-        poidsVol: poidsVol > 0 ? poidsVol.toFixed(1) : null,
-        poidsFacturable: poidsFacturable.toFixed(1),
-        fretNormal:  poidsFacturable * TARIF_AERIEN_NORMAL,
-        fretExpress: poidsFacturable * TARIF_AERIEN_EXPRESS,
+        poidsFacturable: kg.toFixed(1),
+        fretNormal:  kg * TARIF_AERIEN_NORMAL,
+        fretExpress: kg * TARIF_AERIEN_EXPRESS,
     }
 })
 
@@ -293,30 +286,6 @@ const timeline = [
                                    class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
                         </div>
 
-                        <div>
-                            <p class="text-gray-400 text-xs font-medium uppercase tracking-wide mb-2">
-                                Dimensions (cm) <span class="text-gray-600 normal-case">— pour calculer le poids volumétrique</span>
-                            </p>
-                            <div class="grid grid-cols-3 gap-3">
-                                <div>
-                                    <label for="a-l" class="block text-xs text-gray-500 mb-1">Longueur</label>
-                                    <input id="a-l" v-model="a.longueur" type="number" min="1" placeholder="50"
-                                           class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                                </div>
-                                <div>
-                                    <label for="a-w" class="block text-xs text-gray-500 mb-1">Largeur</label>
-                                    <input id="a-w" v-model="a.largeur" type="number" min="1" placeholder="40"
-                                           class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                                </div>
-                                <div>
-                                    <label for="a-h" class="block text-xs text-gray-500 mb-1">Hauteur</label>
-                                    <input id="a-h" v-model="a.hauteur" type="number" min="1" placeholder="30"
-                                           class="w-full bg-white/5 border border-white/15 text-white rounded-[9px] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] placeholder-gray-600" />
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-xs mt-2">Formule aérien : L×W×H (cm) ÷ 5 000 = poids volumétrique (kg)</p>
-                        </div>
-
                     </div>
 
                     <!-- Résultat aérien -->
@@ -334,10 +303,6 @@ const timeline = [
                                 <div class="flex justify-between text-gray-400">
                                     <span>Poids réel</span>
                                     <span class="text-white font-medium">{{ simAerien.kg }} kg</span>
-                                </div>
-                                <div v-if="simAerien.poidsVol" class="flex justify-between text-gray-400">
-                                    <span>Poids volumétrique</span>
-                                    <span class="text-white font-medium">{{ simAerien.poidsVol }} kg</span>
                                 </div>
                                 <div class="flex justify-between text-gray-400">
                                     <span>Poids facturable <span class="text-xs">(le plus élevé)</span></span>

@@ -66,7 +66,7 @@ const teamStats = [
                         Né de la frustration<br>des importateurs africains.
                     </h2>
                     <div class="space-y-4 text-gray-600 leading-[1.75] text-sm">
-                        <p>NETSPRING a été fondé par <strong class="text-[#0D0D0D]">OUATTARA Elysée</strong> après avoir observé les difficultés rencontrées par de nombreux entrepreneurs ivoiriens souhaitant importer depuis la Chine : barrière de la langue, risque de fraude, complexité douanière, manque de transparence.</p>
+                        <p>NETSPRING a été fondé par <strong class="text-[#0D0D0D]">Elysée OUATTARA</strong> après avoir observé les difficultés rencontrées par de nombreux entrepreneurs ivoiriens souhaitant importer depuis la Chine : barrière de la langue, risque de fraude, complexité douanière, manque de transparence.</p>
                         <p>Notre mission depuis 2022 : rendre l'importation accessible à tous les entrepreneurs africains, qu'ils soient débutants ou expérimentés, en prenant en charge l'intégralité du processus avec transparence et professionnalisme.</p>
                         <p>Aujourd'hui, NETSPRING a accompagné plus de 500 clients en Côte d'Ivoire et dans la sous-région, avec plus de 1000 commandes réussies.</p>
                     </div>
@@ -93,7 +93,7 @@ const teamStats = [
                                     <span class="font-heading font-bold text-white text-lg">KB</span>
                                 </div>
                                 <div>
-                                    <p class="font-heading font-bold text-white">KASSAMBA Ben Idriss Diaby</p>
+                                    <p class="font-heading font-bold text-white">Ben Idriss Diaby KASSAMBA</p>
                                     <p class="text-gray-400 text-xs font-semibold mt-0.5">Directeur Exécutif</p>
                                 </div>
                             </div>
@@ -117,24 +117,24 @@ const teamStats = [
 
             <div class="grid sm:grid-cols-2 gap-8 max-w-2xl mx-auto">
 
-                <!-- OUATTARA Elysée -->
+                <!-- Elysée OUATTARA -->
                 <article class="bg-white rounded-[20px] p-8 border border-[#E5E7EB] hover:border-[#F4620A]/30 hover:shadow-[0_8px_32px_rgba(244,98,10,0.08)] transition-all duration-[220ms] text-center">
                     <div class="w-20 h-20 rounded-full mx-auto mb-5 overflow-hidden shadow-[0_4px_20px_rgba(244,98,10,0.35)]">
-                        <img :src="imgElise" alt="OUATTARA Elysée" class="w-full h-full object-cover" />
+                        <img :src="imgElise" alt="Elysée OUATTARA" class="w-full h-full object-cover" />
                     </div>
-                    <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">OUATTARA Elysée</h3>
+                    <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">Elysée OUATTARA</h3>
                     <p class="text-[#F4620A] text-sm font-semibold mt-1 mb-4">Fondateur & Manager général</p>
                     <p class="text-gray-500 text-sm leading-[1.75]">
                         À l'origine du projet NETSPRING, Elysée a construit un pont concret entre les entrepreneurs ivoiriens et les marchés chinois depuis 2022.
                     </p>
                 </article>
 
-                <!-- KASSAMBA Ben Idriss Diaby -->
+                <!-- Ben Idriss Diaby KASSAMBA -->
                 <article class="bg-white rounded-[20px] p-8 border border-[#E5E7EB] hover:border-[#F4620A]/30 hover:shadow-[0_8px_32px_rgba(244,98,10,0.08)] transition-all duration-[220ms] text-center">
                     <div class="w-20 h-20 rounded-full mx-auto mb-5 overflow-hidden shadow-[0_4px_20px_rgba(244,98,10,0.35)]">
-                        <img :src="imgIdriss" alt="KASSAMBA Ben Idriss Diaby" class="w-full h-full object-cover" />
+                        <img :src="imgIdriss" alt="Ben Idriss Diaby KASSAMBA" class="w-full h-full object-cover" />
                     </div>
-                    <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">KASSAMBA Ben Idriss Diaby</h3>
+                    <h3 class="font-heading font-bold text-[#0D0D0D] text-lg">Ben Idriss Diaby KASSAMBA</h3>
                     <p class="text-[#F4620A] text-sm font-semibold mt-1 mb-4">Directeur Exécutif</p>
                     <p class="text-gray-500 text-sm leading-[1.75]">
                         Kassamba pilote les opérations et la stratégie de NETSPRING, assurant l'excellence du service et l'expansion continue de l'activité.

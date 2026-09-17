@@ -27,7 +27,7 @@ import { Head } from '@inertiajs/vue3'
                 <p><strong class="text-[#0D0D0D]">Siège social :</strong> Abidjan, Côte d'Ivoire</p>
                 <p><strong class="text-[#0D0D0D]">Directeur de la publication :</strong> Elysée Ouattara</p>
                 <p><strong class="text-[#0D0D0D]">Email :</strong> <a href="mailto:netspringbusiness@gmail.com" class="text-[#F4620A] hover:underline">netspringbusiness@gmail.com</a></p>
-                <p><strong class="text-[#0D0D0D]">WhatsApp :</strong> +225 0594429552</p>
+                <p><strong class="text-[#0D0D0D]">WhatsApp :</strong> +225 0712328489</p>
             </div>
         </section>
 
