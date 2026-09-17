@@ -98,8 +98,9 @@ jobs:
             # Migrations
             $PHP artisan migrate --force
 
-            # Seed admins
+            # Seed admins + catégories de référence
             $PHP artisan db:seed --class=AdminSeeder --force
+            $PHP artisan db:seed --class=CategorySeeder --force
 
             # Cache
             $PHP artisan config:cache
