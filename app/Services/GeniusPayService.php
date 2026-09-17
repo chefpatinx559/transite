@@ -45,11 +45,19 @@ class GeniusPayService
     {
         $response = $this->request('GET', "/payments/{$reference}");
 
-        if (! $response->successful()) {
-            throw new \RuntimeException("Transaction {$reference} introuvable");
+        if (! $response->successful() || ! $response->json('success')) {
+            Log::error('GeniusPay getPayment error', [
+                'reference' => $reference,
+                'status'    => $response->status(),
+                'response'  => $response->json(),
+            ]);
+            throw new \RuntimeException("Transaction {$reference} introuvable ou échec API");
         }
 
-        return $response->json('data');
+        $data = $response->json('data');
+        Log::info('GeniusPay getPayment', ['reference' => $reference, 'status' => $data['status'] ?? 'N/A']);
+
+        return $data;
     }
 
     /**
@@ -57,7 +65,13 @@ class GeniusPayService
      */
     public function verifyWebhookSignature(string $signature, string $timestamp, string $rawPayload): bool
     {
-        $secret   = config('services.geniuspay.webhook_secret');
+        $secret = config('services.geniuspay.webhook_secret');
+
+        if (empty($secret)) {
+            Log::error('GeniusPay webhook: GENIUSPAY_WEBHOOK_SECRET non configuré');
+            return false;
+        }
+
         $data     = $timestamp . '.' . $rawPayload;
         $expected = hash_hmac('sha256', $data, $secret);
 

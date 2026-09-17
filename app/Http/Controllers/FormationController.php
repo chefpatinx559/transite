@@ -115,8 +115,8 @@ class FormationController extends Controller
         } catch (\Exception $e) {
             Log::error('GeniusPay formation error', ['error' => $e->getMessage()]);
 
-            return redirect()->route('formation.confirmation', ['token' => $registration->token])
-                ->with('warning', 'Inscription enregistrée — paiement en attente.');
+            return redirect()->route('formation.payment.error', ['registration' => $registration->token])
+                ->with('error', 'Impossible d\'initier le paiement. Réessayez ou contactez-nous.');
         }
     }
 

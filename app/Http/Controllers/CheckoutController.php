@@ -116,9 +116,6 @@ class CheckoutController extends Controller
             OrderItem::create(array_merge(['order_id' => $order->id], $line));
         }
 
-        // Vider le panier
-        session()->forget(self::CART_KEY);
-
         // Appel GeniusPay (email + Telegram envoyés dans paymentSuccess après confirmation)
         try {
             $payment = $this->geniusPay->createPayment([
@@ -147,6 +144,9 @@ class CheckoutController extends Controller
             if (! $checkoutUrl) {
                 throw new \RuntimeException('Aucune URL de paiement retournée par GeniusPay');
             }
+
+            // Vider le panier seulement après redirection réussie vers GeniusPay
+            session()->forget(self::CART_KEY);
 
             return redirect($checkoutUrl);
 
