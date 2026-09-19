@@ -34,6 +34,13 @@ function addToCart(product) {
         preserveScroll: true,
     })
 }
+
+function minShipping(p) {
+    const prices = [p.shipping_air_express, p.shipping_air_normal, p.shipping_sea]
+        .filter(v => v != null)
+        .map(Number)
+    return prices.length ? Math.min(...prices) : null
+}
 </script>
 
 <template>
@@ -168,7 +175,7 @@ function addToCart(product) {
                         <h3 class="font-heading font-bold text-[#0D0D0D] text-sm leading-snug mb-2 line-clamp-2">
                             {{ product.name }}
                         </h3>
-                        <div class="flex items-baseline gap-2 mb-4">
+                        <div class="flex items-baseline gap-2 mb-1">
                             <span class="text-[#F4620A] font-bold text-base">{{ formatPrice(product.price) }}</span>
                             <span
                                 v-if="product.compare_price"
@@ -176,6 +183,10 @@ function addToCart(product) {
                                 aria-label="Prix barré"
                             >{{ formatPrice(product.compare_price) }}</span>
                         </div>
+                        <p v-if="minShipping(product) !== null" class="text-xs text-gray-400 mt-0.5 mb-4">
+                            Livraison dès {{ formatPrice(minShipping(product)) }}
+                        </p>
+                        <div v-else class="mb-4" />
 
                         <!-- Actions -->
                         <div class="flex gap-2">

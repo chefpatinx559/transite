@@ -2,29 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NewsletterSubscriber;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class NewsletterController extends Controller
 {
-    /**
-     * Enregistre une inscription à la newsletter.
-     */
-    public function subscribe(Request $request): RedirectResponse
+    public function subscribe(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'email' => 'required|email|max:191|unique:newsletter_subscribers,email',
-            'name' => 'nullable|string|max:100',
-            'source' => 'nullable|in:footer,popup,blog,checkout',
+        $request->validate([
+            'email' => 'required|email|max:191',
         ]);
 
-        NewsletterSubscriber::create([
-            'email' => $validated['email'],
-            'name' => $validated['name'] ?? null,
-            'source' => $validated['source'] ?? 'footer',
-        ]);
+        $apiKey = config('services.brevo.api_key');
+        $listId = config('services.brevo.list_id');
 
-        return redirect()->back()->with('success', 'Merci ! Votre inscription à la newsletter a bien été prise en compte.');
+        $payload = [
+            'email'         => $request->email,
+            'updateEnabled' => true,
+            'attributes'    => ['SOURCE' => 'NETSPRING_FOOTER'],
+        ];
+        if ($listId) {
+            $payload['listIds'] = [(int) $listId];
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'api-key'      => $apiKey,
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ])->post('https://api.brevo.com/v3/contacts', $payload);
+
+            if ($response->successful() || $response->status() === 204) {
+                return response()->json(['message' => 'Inscription réussie !']);
+            }
+
+            // Contact déjà existant → succès silencieux
+            if ($response->status() === 400 &&
+                str_contains($response->body(), 'Contact already exist')) {
+                return response()->json(['message' => 'Vous êtes déjà inscrit(e).']);
+            }
+
+            Log::warning('Brevo subscribe error', ['status' => $response->status(), 'body' => $response->body()]);
+            return response()->json(['message' => 'Une erreur est survenue. Réessayez.'], 500);
+
+        } catch (\Exception $e) {
+            Log::error('Brevo subscribe exception', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Une erreur est survenue. Réessayez.'], 500);
+        }
     }
 }

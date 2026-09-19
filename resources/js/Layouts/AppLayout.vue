@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
+import axios from 'axios'
 import {
     Globe, Menu, X, ArrowRight,
     Mail, MapPin, Phone, FileText, ShoppingCart, CheckCircle2,
@@ -42,6 +43,25 @@ const nav = [
 
 const whatsappUrl   = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20avoir%20plus%20d%27informations.'
 const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%20je%20souhaite%20demander%20un%20devis%20pour%20mon%20projet%20d%27importation.'
+
+// Newsletter
+const newsletterEmail   = ref('')
+const newsletterStatus  = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
+const newsletterMessage = ref('')
+
+async function subscribeNewsletter() {
+    if (!newsletterEmail.value) return
+    newsletterStatus.value = 'loading'
+    try {
+        const res = await axios.post('/newsletter/subscribe', { email: newsletterEmail.value })
+        newsletterStatus.value = 'success'
+        newsletterMessage.value = res.data.message
+        newsletterEmail.value = ''
+    } catch (e: any) {
+        newsletterStatus.value = 'error'
+        newsletterMessage.value = e.response?.data?.message ?? 'Une erreur est survenue.'
+    }
+}
 </script>
 
 <template>
@@ -283,10 +303,11 @@ const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%2
                     </address>
 
                     <h3 class="text-white font-semibold mb-3 text-sm uppercase tracking-widest">Newsletter</h3>
-                    <form class="flex gap-2" @submit.prevent aria-label="Inscription à la newsletter">
+                    <form class="flex gap-2" @submit.prevent="subscribeNewsletter" aria-label="Inscription à la newsletter">
                         <label for="newsletter-email" class="sr-only">Votre adresse email</label>
                         <input
                             id="newsletter-email"
+                            v-model="newsletterEmail"
                             type="email"
                             placeholder="Votre email"
                             autocomplete="email"
@@ -294,11 +315,14 @@ const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%2
                         />
                         <button
                             type="submit"
-                            class="bg-[#F4620A] hover:bg-[#d45208] text-white text-sm font-semibold px-4 py-2.5 rounded-[9px] transition-all duration-[220ms] whitespace-nowrap active:scale-95 cursor-pointer"
+                            :disabled="newsletterStatus === 'loading'"
+                            class="bg-[#F4620A] hover:bg-[#d45208] text-white text-sm font-semibold px-4 py-2.5 rounded-[9px] transition-all duration-[220ms] whitespace-nowrap active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             S'ABONNER
                         </button>
                     </form>
+                    <p v-if="newsletterStatus === 'success'" class="text-xs text-green-400 mt-2">{{ newsletterMessage }}</p>
+                    <p v-if="newsletterStatus === 'error'" class="text-xs text-red-400 mt-2">{{ newsletterMessage }}</p>
                 </div>
             </div>
 

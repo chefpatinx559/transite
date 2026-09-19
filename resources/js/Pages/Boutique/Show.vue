@@ -1,8 +1,8 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ref } from 'vue'
-import { Package, ShoppingCart, MessageCircle, CheckCircle, AlertCircle, ChevronLeft, Eye } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
+import { Package, ShoppingCart, CheckCircle, AlertCircle, ChevronLeft, Eye, Truck, Plane, Ship } from 'lucide-vue-next'
 
 const props = defineProps({
     product: { type: Object, required: true },
@@ -28,12 +28,11 @@ function addToCart() {
     })
 }
 
-function whatsappOrder() {
-    const text = encodeURIComponent(
-        `Bonjour NETSPRING, je souhaite commander : ${props.product.name} (x${quantity.value}) — ${formatPrice(props.product.price * quantity.value)}`
-    )
-    window.open(`https://wa.me/2250712328489?text=${text}`, '_blank', 'noopener')
-}
+const hasShipping = computed(() =>
+    props.product.shipping_air_express != null ||
+    props.product.shipping_air_normal != null ||
+    props.product.shipping_sea != null
+)
 
 function addRelatedToCart(product) {
     router.post('/panier/ajouter', { product_id: product.id, quantity: 1 }, { preserveScroll: true })
@@ -188,14 +187,36 @@ function addRelatedToCart(product) {
                             <ShoppingCart class="w-4.5 h-4.5" aria-hidden="true" />
                             {{ addingCart ? 'Ajout…' : 'Ajouter au panier' }}
                         </button>
-                        <button
-                            class="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-3.5 rounded-[12px] transition-all duration-[220ms] cursor-pointer"
-                            aria-label="Commander via WhatsApp"
-                            @click="whatsappOrder"
-                        >
-                            <MessageCircle class="w-4.5 h-4.5" aria-hidden="true" />
-                            Commander via WhatsApp
-                        </button>
+                    </div>
+
+                    <!-- Livraison -->
+                    <div v-if="hasShipping" class="border-t border-gray-100 pt-4 mt-4">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                            <Truck class="w-4 h-4" aria-hidden="true" /> Options de livraison
+                        </h3>
+                        <div class="space-y-2">
+                            <div v-if="product.shipping_air_express != null" class="flex justify-between items-center text-sm">
+                                <span class="flex items-center gap-2 text-gray-600">
+                                    <Plane class="w-4 h-4 text-blue-500" aria-hidden="true" /> Avion Express
+                                    <span class="text-xs text-gray-400">(~1 semaine)</span>
+                                </span>
+                                <span class="font-semibold text-[#0D0D0D]">{{ formatPrice(product.shipping_air_express) }}</span>
+                            </div>
+                            <div v-if="product.shipping_air_normal != null" class="flex justify-between items-center text-sm">
+                                <span class="flex items-center gap-2 text-gray-600">
+                                    <Plane class="w-4 h-4 text-gray-500" aria-hidden="true" /> Avion Normal
+                                    <span class="text-xs text-gray-400">(~3 semaines)</span>
+                                </span>
+                                <span class="font-semibold text-[#0D0D0D]">{{ formatPrice(product.shipping_air_normal) }}</span>
+                            </div>
+                            <div v-if="product.shipping_sea != null" class="flex justify-between items-center text-sm">
+                                <span class="flex items-center gap-2 text-gray-600">
+                                    <Ship class="w-4 h-4 text-cyan-600" aria-hidden="true" /> Bateau
+                                    <span class="text-xs text-gray-400">(45–60 jours)</span>
+                                </span>
+                                <span class="font-semibold text-[#0D0D0D]">{{ formatPrice(product.shipping_sea) }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
