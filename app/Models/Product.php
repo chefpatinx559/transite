@@ -12,6 +12,7 @@ class Product extends Model
         'name', 'slug', 'description', 'content', 'price', 'compare_price',
         'sku', 'stock', 'type', 'weight', 'images', 'attributes',
         'is_published', 'is_featured', 'sales_count', 'category_id',
+        'shipping_air_express', 'shipping_air_normal', 'shipping_sea',
     ];
 
     protected $casts = [

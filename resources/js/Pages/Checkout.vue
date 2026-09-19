@@ -2,12 +2,13 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head } from '@inertiajs/vue3'
 import { useForm } from '@inertiajs/vue3'
-import { Package, User, MapPin, ShieldCheck } from 'lucide-vue-next'
+import { computed } from 'vue'
+import { Package, User, MapPin, ShieldCheck, Truck } from 'lucide-vue-next'
 
 const props = defineProps({
-    items:    { type: Array,  default: () => [] },
-    total:    { type: Number, default: 0 },
-    subtotal: { type: Number, default: 0 },
+    items:         { type: Array,  default: () => [] },
+    subtotal:      { type: Number, default: 0 },
+    shippingModes: { type: Array,  default: () => [] },
 })
 
 const steps = [
@@ -25,8 +26,15 @@ const form = useForm({
         city:    '',
         country: 'Côte d\'Ivoire',
     },
-    notes:            '',
+    notes:         '',
+    shipping_mode: props.shippingModes.length === 1 ? props.shippingModes[0].mode : null,
 })
+
+const shippingCost = computed(() =>
+    props.shippingModes.find(m => m.mode === form.shipping_mode)?.cost ?? 0
+)
+
+const total = computed(() => props.subtotal + shippingCost.value)
 
 function formatPrice(val) {
     return Number(val).toLocaleString('fr-FR') + ' FCFA'
@@ -114,6 +122,13 @@ function submit() {
                                 <dt class="text-gray-500">Sous-total</dt>
                                 <dd class="font-medium text-[#0D0D0D]">{{ formatPrice(subtotal) }}</dd>
                             </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-500">Livraison</dt>
+                                <dd class="font-medium text-[#0D0D0D]">
+                                    <span v-if="form.shipping_mode">{{ formatPrice(shippingCost) }}</span>
+                                    <span v-else class="text-gray-400">—</span>
+                                </dd>
+                            </div>
                             <div class="flex justify-between items-baseline pt-1 mt-1 border-t border-gray-100">
                                 <dt class="font-bold text-[#0D0D0D]">Total</dt>
                                 <dd class="font-bold text-[#F4620A] text-lg">{{ formatPrice(total) }}</dd>
@@ -125,6 +140,68 @@ function submit() {
                 <!-- Form -->
                 <div class="lg:col-span-2 space-y-6 order-last lg:order-first">
                     <form aria-label="Formulaire de commande" @submit.prevent="submit">
+
+                        <!-- Section 0 — Mode de livraison -->
+                        <fieldset class="bg-white rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.09)] p-6 mb-6">
+                            <legend class="flex items-center gap-2.5 font-heading font-bold text-[#0D0D0D] text-base mb-6">
+                                <Truck class="w-5 h-5 text-[#F4620A]" aria-hidden="true" />
+                                Mode de livraison
+                            </legend>
+
+                            <!-- Aucun mode disponible -->
+                            <div
+                                v-if="shippingModes.length === 0"
+                                class="flex items-start gap-3 p-4 rounded-[10px] bg-orange-50 border border-orange-200"
+                                role="alert"
+                            >
+                                <span class="text-orange-500 text-lg leading-none mt-0.5" aria-hidden="true">⚠</span>
+                                <p class="text-sm text-orange-700">
+                                    Aucun mode de livraison disponible pour votre panier. Contactez-nous.
+                                </p>
+                            </div>
+
+                            <!-- Radio cards -->
+                            <div v-else class="space-y-3" role="radiogroup" aria-label="Choisissez un mode de livraison">
+                                <div
+                                    v-for="mode in shippingModes"
+                                    :key="mode.mode"
+                                    @click="form.shipping_mode = mode.mode"
+                                    :class="[
+                                        'border rounded-[10px] p-4 cursor-pointer transition-all duration-[220ms]',
+                                        form.shipping_mode === mode.mode
+                                            ? 'border-[#F4620A] bg-[#F4620A]/5'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                    ]"
+                                    role="radio"
+                                    :aria-checked="form.shipping_mode === mode.mode"
+                                    tabindex="0"
+                                    @keydown.enter="form.shipping_mode = mode.mode"
+                                    @keydown.space.prevent="form.shipping_mode = mode.mode"
+                                >
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                                                :class="form.shipping_mode === mode.mode
+                                                    ? 'border-[#F4620A]'
+                                                    : 'border-gray-300'"
+                                            >
+                                                <div
+                                                    v-if="form.shipping_mode === mode.mode"
+                                                    class="w-2 h-2 rounded-full bg-[#F4620A]"
+                                                />
+                                            </div>
+                                            <div>
+                                                <p class="font-semibold text-sm text-[#0D0D0D]">{{ mode.label }}</p>
+                                                <p class="text-xs text-gray-500 mt-0.5">{{ mode.delay }}</p>
+                                            </div>
+                                        </div>
+                                        <p class="font-bold text-[#F4620A] text-sm flex-shrink-0 ml-4">{{ formatPrice(mode.cost) }}</p>
+                                    </div>
+                                </div>
+                                <p v-if="form.errors.shipping_mode" class="text-red-500 text-xs mt-1" role="alert">{{ form.errors.shipping_mode }}</p>
+                            </div>
+                        </fieldset>
 
                         <!-- Section 1 — Informations personnelles -->
                         <fieldset class="bg-white rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.09)] p-6 mb-6">
@@ -272,8 +349,8 @@ function submit() {
                         <!-- Submit -->
                         <button
                             type="submit"
-                            :disabled="form.processing"
-                            class="w-full flex items-center justify-center gap-2 bg-[#F4620A] hover:bg-[#d45208] disabled:opacity-60 text-white font-bold py-4 rounded-[12px] transition-all duration-[220ms] shadow-[0_4px_16px_rgba(244,98,10,0.35)] hover:shadow-[0_6px_24px_rgba(244,98,10,0.45)] hover:-translate-y-px active:translate-y-0 cursor-pointer text-base"
+                            :disabled="form.processing || (shippingModes.length > 0 && !form.shipping_mode)"
+                            class="w-full flex items-center justify-center gap-2 bg-[#F4620A] hover:bg-[#d45208] disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold py-4 rounded-[12px] transition-all duration-[220ms] shadow-[0_4px_16px_rgba(244,98,10,0.35)] hover:shadow-[0_6px_24px_rgba(244,98,10,0.45)] hover:-translate-y-px active:translate-y-0 cursor-pointer text-base"
                             aria-label="Confirmer et passer la commande"
                         >
                             {{ form.processing ? 'Redirection vers GeniusPay…' : 'PAYER SUR GENIUSPAY' }}

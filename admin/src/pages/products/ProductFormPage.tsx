@@ -36,6 +36,10 @@ interface ProductData {
   is_published: boolean
   is_featured: boolean
   photo_url?: string | null
+  images?: Array<{ url: string; alt?: string }>
+  shipping_air_express?: number | string | null
+  shipping_air_normal?: number | string | null
+  shipping_sea?: number | string | null
 }
 
 interface FormErrors {
@@ -54,6 +58,8 @@ interface ApiErrorResponse {
   errors?: Record<string, string[]>
   message?: string
 }
+
+const MAX_IMAGES = 10
 
 export default function ProductFormPage() {
   const { id } = useParams<{ id?: string }>()
@@ -75,11 +81,19 @@ export default function ProductFormPage() {
     weight: '',
     is_published: false,
     is_featured: false,
+    shipping_air_express: '',
+    shipping_air_normal: '',
+    shipping_sea: '',
   })
-  const [photo, setPhoto] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const [existingImages, setExistingImages] = useState<{ url: string; alt: string }[]>([])
+  const [newPhotos, setNewPhotos] = useState<File[]>([])
+  const [newPreviews, setNewPreviews] = useState<string[]>([])
   const [errors, setErrors] = useState<FormErrors>({})
   const [isDragging, setIsDragging] = useState(false)
+
+  const totalImages = existingImages.length + newPhotos.length
+  const canAddMore = totalImages < MAX_IMAGES
 
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', 'produit'],
@@ -110,51 +124,68 @@ export default function ProductFormPage() {
       weight: product.weight != null ? String(product.weight) : '',
       is_published: product.is_published ?? false,
       is_featured: product.is_featured ?? false,
+      shipping_air_express: product.shipping_air_express != null ? String(product.shipping_air_express) : '',
+      shipping_air_normal: product.shipping_air_normal != null ? String(product.shipping_air_normal) : '',
+      shipping_sea: product.shipping_sea != null ? String(product.shipping_sea) : '',
     })
-    const imgs = (product as unknown as { images?: Array<{url:string}|string> }).images
-    if (imgs && imgs.length > 0) {
-      const first = imgs[0]
-      const rawUrl = typeof first === 'string' ? first : first.url
-      setPreviewUrl(storageUrl(rawUrl))
+    if (product.images && product.images.length > 0) {
+      setExistingImages(product.images.map(img => ({ url: img.url, alt: img.alt ?? '' })))
     } else if (product.photo_url) {
-      setPreviewUrl(storageUrl(product.photo_url))
+      setExistingImages([{ url: product.photo_url, alt: '' }])
     }
   }, [productData])
 
-  function handleFile(file: File) {
-    setPhoto(file)
-    setPreviewUrl(URL.createObjectURL(file))
+  function addFiles(files: FileList | File[]) {
+    const fileArr = Array.from(files).filter(f => f.type.startsWith('image/'))
+    const remaining = MAX_IMAGES - totalImages
+    const toAdd = fileArr.slice(0, remaining)
+    if (toAdd.length === 0) return
+    const previews = toAdd.map(f => URL.createObjectURL(f))
+    setNewPhotos(prev => [...prev, ...toAdd])
+    setNewPreviews(prev => [...prev, ...previews])
   }
 
   function onFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (file) handleFile(file)
+    if (e.target.files && e.target.files.length > 0) {
+      addFiles(e.target.files)
+      e.target.value = ''
+    }
   }
 
   function onDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault()
     setIsDragging(false)
-    const file = e.dataTransfer.files?.[0]
-    if (file && file.type.startsWith('image/')) handleFile(file)
+    if (canAddMore && e.dataTransfer.files.length > 0) {
+      addFiles(e.dataTransfer.files)
+    }
   }
 
-  function removePhoto() {
-    setPhoto(null)
-    setPreviewUrl(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
+  function removeExistingImage(index: number) {
+    setExistingImages(prev => prev.filter((_, i) => i !== index))
+  }
+
+  function removeNewPhoto(index: number) {
+    setNewPreviews(prev => {
+      URL.revokeObjectURL(prev[index])
+      return prev.filter((_, i) => i !== index)
+    })
+    setNewPhotos(prev => prev.filter((_, i) => i !== index))
   }
 
   const mutation = useMutation({
     mutationFn: () => {
       const fd = new FormData()
-      // Champs optionnels vides → ne pas envoyer (évite erreurs de validation)
-      const optionalFields = ['compare_price', 'sku', 'weight', 'category_id']
+      const optionalFields = [
+        'compare_price', 'sku', 'weight', 'category_id',
+        'shipping_air_express', 'shipping_air_normal', 'shipping_sea',
+      ]
       Object.entries(form).forEach(([k, v]) => {
         if (optionalFields.includes(k) && (v === '' || v === null)) return
         if (typeof v === 'boolean') fd.append(k, v ? '1' : '0')
         else fd.append(k, String(v))
       })
-      if (photo) fd.append('photo', photo)
+      fd.append('existing_images', JSON.stringify(existingImages))
+      newPhotos.forEach(f => fd.append('photos[]', f))
       if (isEdit) {
         return productsApi.update(Number(id), fd)
       }
@@ -200,47 +231,92 @@ export default function ProductFormPage() {
         </div>
       </div>
 
-      {/* Photo */}
+      {/* Photos */}
       <Card>
         <CardHeader>
-          <CardTitle>Photo du produit</CardTitle>
+          <CardTitle>
+            Photos du produit
+            <span className="ml-2 text-sm font-normal text-muted-foreground">
+              ({totalImages}/{MAX_IMAGES})
+            </span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          {previewUrl ? (
-            <div className="relative inline-block">
-              <img src={previewUrl} alt="Aperçu" className="w-40 h-40 object-cover rounded-[12px] border border-[#E5E7EB]" />
-              <button
-                onClick={removePhoto}
-                aria-label="Supprimer la photo"
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
-              >
-                <X size={12} />
-              </button>
-            </div>
-          ) : (
-            <div
-              onDragOver={e => { e.preventDefault(); setIsDragging(true) }}
-              onDragLeave={() => setIsDragging(false)}
-              onDrop={onDrop}
-              onClick={() => fileInputRef.current?.click()}
-              aria-label="Zone de dépôt de photo"
-              className={cn(
-                'border-2 border-dashed rounded-[12px] p-10 text-center cursor-pointer transition-colors',
-                isDragging ? 'border-[#F4620A] bg-orange-50' : 'border-[#E5E7EB] hover:border-[#F4620A]/50',
-              )}
-            >
-              <Upload size={28} className="mx-auto mb-3 text-gray-400" />
-              <p className="text-sm text-gray-500">Glissez une image ici ou cliquez pour choisir</p>
-              <p className="text-xs text-gray-400 mt-1">JPG, PNG, WEBP — max 5 Mo</p>
+        <CardContent className="space-y-4">
+          {/* Thumbnails grid */}
+          {totalImages > 0 && (
+            <div className="flex flex-wrap gap-3">
+              {existingImages.map((img, i) => (
+                <div key={`existing-${i}`} className="relative">
+                  <img
+                    src={storageUrl(img.url)}
+                    alt={img.alt || `Image ${i + 1}`}
+                    className="w-24 h-24 object-cover rounded-[10px] border border-[#E5E7EB]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(i)}
+                    aria-label={`Supprimer l'image ${i + 1}`}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              ))}
+              {newPreviews.map((preview, i) => (
+                <div key={`new-${i}`} className="relative">
+                  <img
+                    src={preview}
+                    alt={`Nouvelle image ${i + 1}`}
+                    className="w-24 h-24 object-cover rounded-[10px] border border-[#E5E7EB]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeNewPhoto(i)}
+                    aria-label={`Supprimer la nouvelle image ${i + 1}`}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              ))}
             </div>
           )}
+
+          {/* Drop zone */}
+          <div
+            onDragOver={e => { e.preventDefault(); if (canAddMore) setIsDragging(true) }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={onDrop}
+            onClick={() => canAddMore && fileInputRef.current?.click()}
+            aria-label="Zone de dépôt de photos"
+            className={cn(
+              'border-2 border-dashed rounded-[12px] p-8 text-center transition-colors',
+              canAddMore ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
+              isDragging && canAddMore
+                ? 'border-[#F4620A] bg-orange-50'
+                : 'border-[#E5E7EB] hover:border-[#F4620A]/50',
+            )}
+          >
+            <Upload size={24} className="mx-auto mb-2 text-gray-400" />
+            {canAddMore ? (
+              <>
+                <p className="text-sm text-gray-500">Glissez des images ici ou cliquez pour choisir</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  JPG, PNG, WEBP — max 5 Mo — {MAX_IMAGES - totalImages} emplacement(s) restant(s)
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-500">Limite atteinte ({MAX_IMAGES} images maximum)</p>
+            )}
+          </div>
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
+            multiple
             onChange={onFileChange}
             className="hidden"
-            aria-label="Sélectionner une photo"
+            aria-label="Sélectionner des photos"
           />
         </CardContent>
       </Card>
@@ -392,6 +468,48 @@ export default function ProductFormPage() {
               placeholder="0.00"
             />
             {errors.weight && <p className="text-xs text-red-600" role="alert">{errors.weight}</p>}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Frais de livraison */}
+      <Card>
+        <CardHeader><CardTitle>Frais de livraison</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Laisser vide si ce mode n'est pas disponible pour ce produit.
+          </p>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <Label>Avion Express <span className="text-muted-foreground text-xs">(~1 sem.)</span></Label>
+              <Input
+                type="number"
+                min="0"
+                placeholder="Prix FCFA"
+                value={form.shipping_air_express}
+                onChange={e => set('shipping_air_express', e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Avion Normal <span className="text-muted-foreground text-xs">(~3 sem.)</span></Label>
+              <Input
+                type="number"
+                min="0"
+                placeholder="Prix FCFA"
+                value={form.shipping_air_normal}
+                onChange={e => set('shipping_air_normal', e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Bateau <span className="text-muted-foreground text-xs">(45-60 j.)</span></Label>
+              <Input
+                type="number"
+                min="0"
+                placeholder="Prix FCFA"
+                value={form.shipping_sea}
+                onChange={e => set('shipping_sea', e.target.value)}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

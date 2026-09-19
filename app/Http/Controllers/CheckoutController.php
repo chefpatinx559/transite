@@ -36,10 +36,43 @@ class CheckoutController extends Controller
 
         [$items, $subtotal] = $this->buildCartItems($cart);
 
+        // Calcul des modes de livraison disponibles
+        $productIds = array_keys($cart);
+        $products = \App\Models\Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+        $modes = [];
+        $modeKeys = [
+            'air_express' => ['label' => 'Avion Express', 'delay' => '~1 semaine',   'field' => 'shipping_air_express'],
+            'air_normal'  => ['label' => 'Avion Normal',  'delay' => '~3 semaines',  'field' => 'shipping_air_normal'],
+            'sea'         => ['label' => 'Bateau',         'delay' => '45–60 jours', 'field' => 'shipping_sea'],
+        ];
+        foreach ($modeKeys as $key => $info) {
+            $totalCost = 0;
+            $available = true;
+            foreach ($cart as $productId => $item) {
+                $product = $products->get($productId);
+                $qty = $item['quantity'] ?? 1;
+                if (!$product || $product->{$info['field']} === null) {
+                    $available = false;
+                    break;
+                }
+                $totalCost += $product->{$info['field']} * $qty;
+            }
+            if ($available) {
+                $modes[] = [
+                    'mode'  => $key,
+                    'label' => $info['label'],
+                    'delay' => $info['delay'],
+                    'cost'  => $totalCost,
+                ];
+            }
+        }
+
         return Inertia::render('Checkout', [
-            'items'    => $items,
-            'subtotal' => $subtotal,
-            'total'    => $subtotal,
+            'items'         => $items,
+            'subtotal'      => $subtotal,
+            'total'         => $subtotal,
+            'shippingModes' => $modes,
         ]);
     }
 
@@ -59,6 +92,7 @@ class CheckoutController extends Controller
             'shipping_address.city'    => 'required|string|max:100',
             'shipping_address.country' => 'nullable|string|max:100',
             'notes'                    => 'nullable|string|max:1000',
+            'shipping_mode'            => 'required|in:air_express,air_normal,sea',
         ]);
 
         // Recalcul depuis la BDD
@@ -87,7 +121,21 @@ class CheckoutController extends Controller
             ];
         }
 
-        $total = $subtotal;
+        // Recalcul du coût de livraison depuis la BDD
+        $shippingField = match($validated['shipping_mode']) {
+            'air_express' => 'shipping_air_express',
+            'air_normal'  => 'shipping_air_normal',
+            'sea'         => 'shipping_sea',
+        };
+        $shippingCost = 0.0;
+        foreach ($lineItems as $item) {
+            $product = Product::find($item['product_id']);
+            if ($product && $product->{$shippingField} !== null) {
+                $shippingCost += $product->{$shippingField} * $item['quantity'];
+            }
+        }
+
+        $total = $subtotal + $shippingCost;
 
         // Montant minimum GeniusPay : 200 XOF
         if ($total < 200) {
@@ -100,7 +148,8 @@ class CheckoutController extends Controller
             'order_number'     => Order::generateOrderNumber(),
             'status'           => 'pending',
             'subtotal'         => $subtotal,
-            'shipping_cost'    => 0.00,
+            'shipping_cost'    => $shippingCost,
+            'shipping_mode'    => $validated['shipping_mode'],
             'discount_amount'  => 0.00,
             'total'            => $total,
             'currency'         => 'XOF',
