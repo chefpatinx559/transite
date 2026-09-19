@@ -248,7 +248,7 @@ export default function ProductFormPage() {
               {existingImages.map((img, i) => (
                 <div key={`existing-${i}`} className="relative">
                   <img
-                    src={storageUrl(img.url)}
+                    src={storageUrl(img.url) ?? undefined}
                     alt={img.alt || `Image ${i + 1}`}
                     className="w-24 h-24 object-cover rounded-[10px] border border-[#E5E7EB]"
                   />
