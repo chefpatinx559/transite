@@ -46,7 +46,7 @@ const whatsappDevis = 'https://wa.me/2250712328489?text=Bonjour%20NETSPRING%2C%2
 
 // Newsletter
 const newsletterEmail   = ref('')
-const newsletterStatus  = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
+const newsletterStatus  = ref('idle')
 const newsletterMessage = ref('')
 
 async function subscribeNewsletter() {
