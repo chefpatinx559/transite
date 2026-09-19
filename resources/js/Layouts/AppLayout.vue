@@ -57,7 +57,7 @@ async function subscribeNewsletter() {
         newsletterStatus.value = 'success'
         newsletterMessage.value = res.data.message
         newsletterEmail.value = ''
-    } catch (e: any) {
+    } catch (e) {
         newsletterStatus.value = 'error'
         newsletterMessage.value = e.response?.data?.message ?? 'Une erreur est survenue.'
     }
