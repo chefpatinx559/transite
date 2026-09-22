@@ -135,7 +135,7 @@ onMounted(() => {
   scene.add(globeGroup)
 
   // Earth night texture (city lights glow via emissiveMap)
-  const tex = new THREE.TextureLoader().load('/images/earth-night.png')
+  const tex = new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_lights_2048.png')
   globeGroup.add(new THREE.Mesh(
     new THREE.SphereGeometry(1, 64, 64),
     new THREE.MeshPhongMaterial({
