@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { useReveal } from '@/composables/useReveal'
 import SocialProof from '@/Components/SocialProof.vue'
 import BlogPreview from '@/Components/BlogPreview.vue'
+import GlobeAnimation from '@/Components/GlobeAnimation.vue'
 
 useReveal()
 
@@ -127,37 +128,15 @@ const formationChecklist = [
                 </ul>
             </div>
 
-            <!-- Visuel droit -->
-            <!--
-                TODO: Remplacer ce bloc par une vraie photo authentique (équipe NETSPRING,
-                marchandises, entrepôt, Bouaké) — 800x600px WebP, importée via Vite.
-                Image recommandée : resources/images/hero-netspring.webp
-            -->
-            <div class="relative hidden lg:block">
+            <!-- Visuel droit — globe 3D animé Chine → Côte d'Ivoire -->
+            <div class="relative">
                 <div
-                    class="relative rounded-[20px] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)] aspect-[4/3] bg-[#0D0D0D]"
+                    class="relative rounded-[20px] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)] h-64 sm:h-80 lg:aspect-4/3 lg:h-auto bg-ink"
                     role="img"
-                    aria-label="Commerce Chine vers Côte d'Ivoire — NETSPRING"
+                    aria-label="Globe animé — route commerciale Chine vers Côte d'Ivoire — NETSPRING"
                 >
-                    <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#0D0D0D] to-[#2d1a0a] flex flex-col items-center justify-center p-10 text-white">
-                        <Ship class="w-20 h-20 text-[#F4620A] mb-4" aria-hidden="true" />
-                        <p class="font-heading text-2xl font-bold text-center leading-snug">Commerce<br>International</p>
-                        <div class="flex items-center gap-4 mt-5 w-full max-w-xs">
-                            <div class="flex items-center gap-2 text-gray-300 text-sm font-medium">
-                                <MapPin class="w-4 h-4 text-[#F4620A]" aria-hidden="true" />
-                                Chine
-                            </div>
-                            <div class="flex-1 flex items-center gap-1" aria-hidden="true">
-                                <div class="h-px flex-1 bg-gradient-to-r from-[#F4620A] to-transparent"></div>
-                                <div class="w-2 h-2 bg-[#F4620A] rounded-full"></div>
-                                <div class="h-px flex-1 bg-gradient-to-l from-[#F4620A] to-transparent"></div>
-                            </div>
-                            <div class="flex items-center gap-2 text-gray-300 text-sm font-medium">
-                                <MapPin class="w-4 h-4 text-[#F4620A]" aria-hidden="true" />
-                                Côte d'Ivoire
-                            </div>
-                        </div>
-                    </div>
+                    <GlobeAnimation class="absolute inset-0 w-full h-full" />
+
                     <div class="absolute bottom-5 left-5 bg-white rounded-[12px] px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
                         <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Clients satisfaits</p>
                         <p class="text-lg font-heading font-bold text-[#0D0D0D]">
