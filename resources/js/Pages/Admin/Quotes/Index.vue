@@ -50,7 +50,7 @@ function truncate(str, n = 50) {
 </script>
 
 <template>
-    <Head title="Devis — Admin NETSPRING" />
+    <Head title="Devis — Admin" />
     <AdminLayout>
         <template #page-title>Devis</template>
 

@@ -34,13 +34,31 @@ const hasShipping = computed(() =>
     props.product.shipping_sea != null
 )
 
+const productSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: props.product.name,
+        description: props.product.short_description || props.product.name,
+        image: props.product.images?.[0]?.url ?? props.product.images?.[0] ?? '',
+        offers: {
+            '@type': 'Offer',
+            price: props.product.price,
+            priceCurrency: 'XOF',
+            availability: props.product.is_published ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            seller: { '@type': 'Organization', name: 'NETSPRING', url: 'https://netspring.business' },
+        },
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
+
 function addRelatedToCart(product) {
     router.post('/panier/ajouter', { product_id: product.id, quantity: 1 }, { preserveScroll: true })
 }
 </script>
 
 <template>
-    <Head :title="`${product.name} — Boutique NETSPRING`">
+    <Head :title="`${product.name} — Boutique`">
         <meta name="description" :content="product.short_description || `Achetez ${product.name} sur NETSPRING — Livraison en Côte d'Ivoire depuis la Chine.`" />
         <meta property="og:title" :content="`${product.name} — NETSPRING`" />
         <meta property="og:description" :content="product.short_description || `${product.name} disponible sur NETSPRING.`" />
@@ -50,6 +68,7 @@ function addRelatedToCart(product) {
         <meta name="twitter:title" :content="product.name" />
         <meta name="twitter:image" :content="product.images?.[0]?.url ?? product.images?.[0] ?? ''" />
     </Head>
+    <div v-html="productSchemaTag" style="display:none" />
     <AppLayout>
 
         <!-- Breadcrumb -->

@@ -43,10 +43,32 @@ const filtered = computed(() => {
 function toggle(id) {
     openId.value = openId.value === id ? null : id
 }
+
+const faqSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: displayedFaqs.map(f => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: { '@type': 'Answer', text: f.answer },
+        })),
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
 </script>
 
 <template>
-    <Head title="FAQ — Questions fréquentes — NETSPRING" />
+    <Head title="FAQ — Questions fréquentes">
+        <meta name="description" content="Trouvez les réponses à vos questions sur l'importation depuis la Chine : délais, coûts, documents, paiements, dédouanement en Côte d'Ivoire. FAQ NETSPRING." />
+        <link rel="canonical" href="https://netspring.business/faq" />
+        <meta property="og:title" content="FAQ — Questions fréquentes | NETSPRING" />
+        <meta property="og:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents douaniers, paiements sécurisés." />
+        <meta property="og:url" content="https://netspring.business/faq" />
+        <meta name="twitter:title" content="FAQ — Questions fréquentes | NETSPRING" />
+        <meta name="twitter:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents, paiements." />
+    </Head>
+    <div v-html="faqSchemaTag" style="display:none" />
     <AppLayout>
 
     <!-- HERO -->

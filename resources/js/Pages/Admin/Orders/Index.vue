@@ -62,7 +62,7 @@ function formatDate(val) {
 </script>
 
 <template>
-    <Head title="Commandes — Admin NETSPRING" />
+    <Head title="Commandes — Admin" />
     <AdminLayout>
         <template #page-title>Commandes</template>
 

@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Paiement échoué — NETSPRING" />
+    <Head title="Paiement échoué" />
     <AppLayout>
         <div class="max-w-2xl mx-auto px-6 py-20 text-center">
 

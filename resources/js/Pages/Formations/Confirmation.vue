@@ -19,7 +19,7 @@ function formatPrice(val) {
 </script>
 
 <template>
-    <Head title="Inscription confirmée — NETSPRING" />
+    <Head title="Inscription confirmée" />
     <AppLayout>
         <div class="max-w-2xl mx-auto px-6 py-20">
 

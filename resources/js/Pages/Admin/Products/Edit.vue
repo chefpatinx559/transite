@@ -49,7 +49,7 @@ function confirmDelete() {
 </script>
 
 <template>
-    <Head :title="`Modifier ${product.name} — Admin NETSPRING`" />
+    <Head :title="`Modifier ${product.name} — Admin`" />
     <AdminLayout>
         <template #page-title>Modifier le produit</template>
         <template #header-actions>

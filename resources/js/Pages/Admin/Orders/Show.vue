@@ -48,7 +48,7 @@ function formatDate(d) {
 </script>
 
 <template>
-    <Head :title="`Commande ${order.order_number} — Admin NETSPRING`" />
+    <Head :title="`Commande ${order.order_number} — Admin`" />
     <AdminLayout>
         <template #page-title>Commande {{ order.order_number }}</template>
         <template #header-actions>

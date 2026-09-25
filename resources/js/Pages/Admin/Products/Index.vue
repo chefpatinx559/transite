@@ -25,7 +25,7 @@ function confirmDelete(product) {
 </script>
 
 <template>
-    <Head title="Produits — Admin NETSPRING" />
+    <Head title="Produits — Admin" />
     <AdminLayout>
         <template #page-title>Produits</template>
         <template #header-actions>

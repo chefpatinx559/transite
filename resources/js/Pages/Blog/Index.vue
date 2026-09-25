@@ -31,7 +31,15 @@ function coverUrl(path) {
 </script>
 
 <template>
-    <Head title="Blog — Conseils importation & commerce Chine-CI" />
+    <Head title="Blog — Conseils importation & commerce Chine-CI">
+        <meta name="description" content="Blog NETSPRING : articles, guides et conseils sur l'importation depuis la Chine, le commerce international et l'entrepreneuriat en Côte d'Ivoire." />
+        <link rel="canonical" href="https://netspring.business/blog" />
+        <meta property="og:title" content="Blog — Conseils Import Chine-CI | NETSPRING" />
+        <meta property="og:description" content="Articles et guides sur l'importation depuis la Chine, le commerce international et l'entrepreneuriat en Côte d'Ivoire." />
+        <meta property="og:url" content="https://netspring.business/blog" />
+        <meta name="twitter:title" content="Blog NETSPRING — Import Chine-CI" />
+        <meta name="twitter:description" content="Articles et guides sur l'importation depuis la Chine et l'entrepreneuriat en Côte d'Ivoire." />
+    </Head>
     <AppLayout>
 
     <!-- ── HERO ──────────────────────────────────── -->

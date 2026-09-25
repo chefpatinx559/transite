@@ -26,7 +26,15 @@ function coverUrl(path) {
 </script>
 
 <template>
-    <Head title="Formations — NETSPRING" />
+    <Head title="Formations">
+        <meta name="description" content="Formations NETSPRING : apprenez à importer depuis la Chine, négocier avec les fournisseurs, gérer la logistique internationale. En ligne et en présentiel." />
+        <link rel="canonical" href="https://netspring.business/formations" />
+        <meta property="og:title" content="Formations Import Chine — NETSPRING Côte d'Ivoire" />
+        <meta property="og:description" content="Apprenez à importer depuis la Chine : e-commerce, sourcing, négociation, logistique. Formations en ligne et en présentiel." />
+        <meta property="og:url" content="https://netspring.business/formations" />
+        <meta name="twitter:title" content="Formations Import Chine — NETSPRING" />
+        <meta name="twitter:description" content="Apprenez à importer depuis la Chine : e-commerce, sourcing, négociation, logistique." />
+    </Head>
     <AppLayout>
 
     <!-- HERO -->

@@ -28,7 +28,7 @@ function confirmDelete(post) {
 </script>
 
 <template>
-    <Head title="Articles — Admin NETSPRING" />
+    <Head title="Articles — Admin" />
     <AdminLayout>
         <template #page-title>Articles</template>
         <template #header-actions>

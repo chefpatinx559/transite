@@ -46,7 +46,7 @@ function submit() {
 </script>
 
 <template>
-    <Head title="Checkout — NETSPRING" />
+    <Head title="Checkout" />
     <AppLayout>
 
         <!-- Header -->

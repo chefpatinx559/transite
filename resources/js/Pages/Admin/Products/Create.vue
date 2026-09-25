@@ -44,7 +44,7 @@ function submit() {
 </script>
 
 <template>
-    <Head title="Nouveau produit — Admin NETSPRING" />
+    <Head title="Nouveau produit — Admin" />
     <AdminLayout>
         <template #page-title>Nouveau produit</template>
         <template #header-actions>

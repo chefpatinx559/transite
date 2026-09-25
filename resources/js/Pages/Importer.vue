@@ -78,7 +78,15 @@ const timeline = [
 </script>
 
 <template>
-    <Head title="Importer depuis la Chine — NETSPRING" />
+    <Head title="Importer depuis la Chine">
+        <meta name="description" content="Guide complet pour importer depuis la Chine vers la Côte d'Ivoire. Simulateur de coûts, demande de devis, accompagnement personnalisé par NETSPRING." />
+        <link rel="canonical" href="https://netspring.business/importer" />
+        <meta property="og:title" content="Importer depuis la Chine — NETSPRING" />
+        <meta property="og:description" content="Estimez vos coûts d'importation et demandez un devis gratuit. NETSPRING gère tout : fournisseurs, transport, dédouanement." />
+        <meta property="og:url" content="https://netspring.business/importer" />
+        <meta name="twitter:title" content="Importer depuis la Chine — NETSPRING" />
+        <meta name="twitter:description" content="Estimez vos coûts d'importation et demandez un devis gratuit. NETSPRING gère tout : fournisseurs, transport, dédouanement." />
+    </Head>
     <AppLayout>
 
     <!-- HERO -->

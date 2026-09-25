@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/vue3'
 </script>
 
 <template>
-    <Head title="Politique de confidentialité — NETSPRING" />
+    <Head title="Politique de confidentialité" />
     <AppLayout>
 
     <!-- Hero -->

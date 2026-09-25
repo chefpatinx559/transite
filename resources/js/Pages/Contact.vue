@@ -21,7 +21,15 @@ const contacts = [
 </script>
 
 <template>
-    <Head title="Contact — NETSPRING" />
+    <Head title="Contact">
+        <meta name="description" content="Contactez NETSPRING pour vos projets d'importation depuis la Chine. WhatsApp, email, formulaire. Réponse sous 24h. Bouaké, Côte d'Ivoire." />
+        <link rel="canonical" href="https://netspring.business/contact" />
+        <meta property="og:title" content="Contactez-nous — NETSPRING" />
+        <meta property="og:description" content="Besoin d'aide pour importer depuis la Chine ? Contactez NETSPRING : WhatsApp, email ou formulaire. Réponse sous 24h." />
+        <meta property="og:url" content="https://netspring.business/contact" />
+        <meta name="twitter:title" content="Contactez-nous — NETSPRING" />
+        <meta name="twitter:description" content="Besoin d'aide pour importer depuis la Chine ? Contactez NETSPRING. Réponse sous 24h." />
+    </Head>
     <AppLayout>
 
     <!-- HERO -->

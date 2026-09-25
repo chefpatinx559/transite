@@ -43,7 +43,7 @@ function formatDate(val) {
 </script>
 
 <template>
-    <Head title="Mes commandes — NETSPRING" />
+    <Head title="Mes commandes" />
     <ClientLayout>
 
         <!-- Header -->

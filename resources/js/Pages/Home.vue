@@ -62,8 +62,14 @@ const formationChecklist = [
 
 <template>
     <Head>
-        <title>NETSPRING — Votre pont commercial Chine – Côte d'Ivoire</title>
+        <title>Votre pont commercial Chine – Côte d'Ivoire</title>
         <meta name="description" content="NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine : sourcing, négociation, transport, dédouanement et formations." />
+        <link rel="canonical" href="https://netspring.business/" />
+        <meta property="og:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
+        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
+        <meta property="og:url" content="https://netspring.business/" />
+        <meta name="twitter:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
+        <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
     </Head>
 
     <AppLayout>

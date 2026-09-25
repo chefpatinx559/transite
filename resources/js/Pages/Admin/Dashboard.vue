@@ -50,7 +50,7 @@ const statCards = [
 </script>
 
 <template>
-    <Head title="Admin Dashboard — NETSPRING" />
+    <Head title="Admin Dashboard" />
     <AdminLayout>
         <template #page-title>Dashboard</template>
 

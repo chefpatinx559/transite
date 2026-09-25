@@ -33,7 +33,7 @@ function removeItem(item) {
 </script>
 
 <template>
-    <Head title="Mon panier — NETSPRING" />
+    <Head title="Mon panier" />
     <AppLayout>
 
         <!-- Page header -->

@@ -24,7 +24,7 @@ function submit() {
 </script>
 
 <template>
-    <Head title="Créer mon compte — NETSPRING" />
+    <Head title="Créer mon compte" />
 
     <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
         <div class="w-full max-w-md">

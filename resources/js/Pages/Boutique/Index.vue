@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link, router } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
-import { Search, Package, ShoppingCart, Eye, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
+import { Search, Package, ShoppingCart, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
 
 const props = defineProps({
     products:   { type: Object, default: () => ({ data: [], links: [], meta: {} }) },
@@ -44,7 +44,15 @@ function minShipping(p) {
 </script>
 
 <template>
-    <Head title="Boutique — NETSPRING" />
+    <Head title="Boutique">
+        <meta name="description" content="Boutique NETSPRING : produits importés de Chine, livrés en Côte d'Ivoire. Textile, électronique, accessoires et plus. Paiement sécurisé." />
+        <link rel="canonical" href="https://netspring.business/boutique" />
+        <meta property="og:title" content="Boutique — Produits importés de Chine | NETSPRING" />
+        <meta property="og:description" content="Découvrez notre sélection de produits importés directement de Chine. Livraison en Côte d'Ivoire, paiement sécurisé." />
+        <meta property="og:url" content="https://netspring.business/boutique" />
+        <meta name="twitter:title" content="Boutique — NETSPRING" />
+        <meta name="twitter:description" content="Produits importés de Chine, livrés en Côte d'Ivoire. Paiement sécurisé." />
+    </Head>
     <AppLayout>
 
         <!-- HERO -->
@@ -140,11 +148,13 @@ function minShipping(p) {
                 role="list"
                 aria-label="Liste des produits"
             >
-                <article
+                <Link
                     v-for="product in products.data"
                     :key="product.id"
-                    class="card-lift bg-white rounded-[16px] shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden group"
+                    :href="`/boutique/${product.slug}`"
+                    class="card-lift bg-white rounded-[16px] shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden group cursor-pointer"
                     role="listitem"
+                    :aria-label="`Voir ${product.name}`"
                 >
                     <!-- Image / placeholder -->
                     <div class="relative aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -189,25 +199,16 @@ function minShipping(p) {
                         <div v-else class="mb-4" />
 
                         <!-- Actions -->
-                        <div class="flex gap-2">
-                            <button
-                                class="btn-press flex-1 flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-3 min-h-[44px] rounded-[10px] transition-colors duration-[220ms] cursor-pointer"
-                                :aria-label="`Ajouter ${product.name} au panier`"
-                                @click="addToCart(product)"
-                            >
-                                <ShoppingCart class="w-3.5 h-3.5" aria-hidden="true" />
-                                Ajouter
-                            </button>
-                            <Link
-                                :href="`/boutique/${product.slug}`"
-                                class="w-11 h-11 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-[10px] transition-all duration-[220ms] flex-shrink-0"
-                                :aria-label="`Voir les détails de ${product.name}`"
-                            >
-                                <Eye class="w-4 h-4 text-gray-600" aria-hidden="true" />
-                            </Link>
-                        </div>
+                        <button
+                            class="btn-press w-full flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-3 min-h-[44px] rounded-[10px] transition-colors duration-[220ms] cursor-pointer"
+                            :aria-label="`Ajouter ${product.name} au panier`"
+                            @click.prevent="addToCart(product)"
+                        >
+                            <ShoppingCart class="w-3.5 h-3.5" aria-hidden="true" />
+                            Ajouter au panier
+                        </button>
                     </div>
-                </article>
+                </Link>
             </div>
 
             <!-- Pagination -->

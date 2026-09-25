@@ -44,10 +44,31 @@ const isFull = computed(() =>
     props.formation.max_participants &&
     props.formation.participants_count >= props.formation.max_participants
 )
+
+const courseSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Course',
+        name: props.formation.title,
+        description: props.formation.excerpt || props.formation.title,
+        image: coverUrl(props.formation.cover_image),
+        provider: { '@type': 'Organization', name: 'NETSPRING', url: 'https://netspring.business' },
+        ...(props.formation.price != null && {
+            offers: {
+                '@type': 'Offer',
+                price: props.formation.price,
+                priceCurrency: 'XOF',
+                availability: isFull.value ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+            },
+        }),
+        ...(props.formation.mode && { courseMode: props.formation.mode }),
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
 </script>
 
 <template>
-    <Head :title="`${formation.title} — Formations NETSPRING`">
+    <Head :title="`${formation.title} — Formations`">
         <meta name="description" :content="formation.excerpt || `Inscrivez-vous à la formation ${formation.title} — NETSPRING Côte d'Ivoire.`" />
         <meta property="og:title" :content="`${formation.title} — NETSPRING`" />
         <meta property="og:description" :content="formation.excerpt || formation.title" />
@@ -57,6 +78,7 @@ const isFull = computed(() =>
         <meta name="twitter:title" :content="formation.title" />
         <meta name="twitter:image" :content="coverUrl(formation.cover_image)" />
     </Head>
+    <div v-html="courseSchemaTag" style="display:none" />
     <AppLayout>
 
     <!-- HERO -->

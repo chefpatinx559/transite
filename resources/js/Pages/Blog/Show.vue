@@ -33,7 +33,7 @@ function share() {
 </script>
 
 <template>
-    <Head :title="`${post.title} — Blog NETSPRING`">
+    <Head :title="`${post.title} — Blog`">
         <meta name="description" :content="post.excerpt || `Article du blog NETSPRING : ${post.title}`" />
         <meta property="og:title" :content="`${post.title} — Blog NETSPRING`" />
         <meta property="og:description" :content="post.excerpt || post.title" />

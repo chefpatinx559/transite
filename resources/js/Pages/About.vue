@@ -21,7 +21,15 @@ const teamStats = [
 </script>
 
 <template>
-    <Head title="À propos — NETSPRING" />
+    <Head title="À propos">
+        <meta name="description" content="NETSPRING, votre pont commercial Chine – Côte d'Ivoire depuis 2022. Plus de 500 clients accompagnés, 1000+ commandes réalisées. Découvrez notre équipe et notre mission." />
+        <link rel="canonical" href="https://netspring.business/a-propos" />
+        <meta property="og:title" content="À propos — NETSPRING | Commerce Chine – Côte d'Ivoire" />
+        <meta property="og:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine. Découvrez notre histoire." />
+        <meta property="og:url" content="https://netspring.business/a-propos" />
+        <meta name="twitter:title" content="À propos — NETSPRING" />
+        <meta name="twitter:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine." />
+    </Head>
     <AppLayout>
 
     <!-- HERO -->

@@ -58,7 +58,7 @@ const statCards = [
 </script>
 
 <template>
-    <Head title="Mon tableau de bord — NETSPRING" />
+    <Head title="Mon tableau de bord" />
     <ClientLayout>
 
         <!-- Header -->

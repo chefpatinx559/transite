@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build site public (Vue + Inertia)
+      - name: Build site public (Vue + Inertia) + SSR
         run: npm ci && npm run build
 
       # ── 5. Build Admin React ─────────────────────────────
@@ -69,11 +69,13 @@ jobs:
 
             mkdir -p "$PUBLIC"
 
-            # Copier index.php + .htaccess vers public_html
+            # Copier index.php + .htaccess + SEO assets vers public_html
             cp "$LARAVEL/public/index.php" "$PUBLIC/index.php"
             [ -f "$LARAVEL/public/.htaccess" ] && cp "$LARAVEL/public/.htaccess" "$PUBLIC/.htaccess"
             [ -f "$LARAVEL/public/robots.txt" ] && cp "$LARAVEL/public/robots.txt" "$PUBLIC/robots.txt"
-            [ -f "$LARAVEL/public/favicon.ico" ] && cp "$LARAVEL/public/favicon.ico" "$PUBLIC/favicon.ico"
+            for f in favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png og-image.png site.webmanifest; do
+              [ -f "$LARAVEL/public/$f" ] && cp "$LARAVEL/public/$f" "$PUBLIC/$f"
+            done
 
             # Assets Vite
             [ -d "$LARAVEL/public/build" ] && rsync -a --delete "$LARAVEL/public/build/" "$PUBLIC/build/"
@@ -106,5 +108,20 @@ jobs:
             $PHP artisan config:cache
             $PHP artisan route:cache
             $PHP artisan view:cache
+
+            # SSR — démarrer/redémarrer le serveur Node Inertia (port 13714)
+            NODE=$(which node 2>/dev/null || which node20 2>/dev/null || which node18 2>/dev/null || echo "")
+            if [ -n "$NODE" ] && [ -f "$LARAVEL/bootstrap/ssr/ssr.js" ]; then
+              echo "Node binary: $NODE"
+              # Tuer l'ancien processus SSR s'il existe
+              pkill -f "bootstrap/ssr/ssr.js" 2>/dev/null || true
+              sleep 1
+              # Lancer le nouveau en arrière-plan
+              cd "$LARAVEL"
+              nohup $NODE bootstrap/ssr/ssr.js > storage/logs/ssr.log 2>&1 &
+              echo "✅ SSR Inertia démarré (PID $!)"
+            else
+              echo "⚠️  Node.js non trouvé ou SSR non buildé — SSR désactivé, le site fonctionne en mode SPA"
+            fi
 
             echo "✅ NETSPRING déployé avec succès !"

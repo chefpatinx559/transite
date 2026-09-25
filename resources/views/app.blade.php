@@ -4,28 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- SEO base --}}
-        <meta name="description" content="NETSPRING — Votre pont commercial entre la Chine et la Côte d'Ivoire. Importation, sourcing, formations et boutique.">
         <meta name="robots" content="index, follow">
-        <link rel="canonical" href="{{ url()->current() }}">
 
-        {{-- Open Graph (surcharge possible depuis chaque page via @inertiaHead) --}}
+        {{-- OG / Twitter — valeurs globales (title, description, url viennent de <Head> par page) --}}
         <meta property="og:site_name" content="NETSPRING">
         <meta property="og:locale" content="fr_CI">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire">
-        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022.">
-        {{-- TODO: Remplacer og-image.png par une vraie photo (équipe, locaux, produits) 1200x630px --}}
         <meta property="og:image" content="{{ asset('og-image.png') }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="NETSPRING — Commerce Chine vers Côte d'Ivoire">
-
-        {{-- Twitter / X --}}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="NETSPRING — Chine – Côte d'Ivoire">
-        <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés.">
         <meta name="twitter:image" content="{{ asset('og-image.png') }}">
 
         {{-- Favicons --}}
