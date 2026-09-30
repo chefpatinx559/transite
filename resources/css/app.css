@@ -232,6 +232,13 @@ a, button, [role="button"] {
     .card-lift:hover { transform: none; }
 }
 
+/* ── Custom dot cursor — hide native on desktop ── */
+@media (pointer: fine) {
+    html, body { cursor: none; }
+    a, button, [role="button"], input, textarea, select,
+    a *, button *, [role="button"] * { cursor: none; }
+}
+
 /* ── Overflow guard (UX rule #69) ── */
 body {
     overflow-x: hidden;

@@ -7,6 +7,7 @@ import {
     Mail, MapPin, Phone, FileText, ShoppingCart, CheckCircle2,
 } from 'lucide-vue-next'
 import Logo from '@/Components/Logo.vue'
+import DotCursor from '@/Components/DotCursor.vue'
 
 const page       = usePage()
 const isScrolled = ref(false)
@@ -65,6 +66,9 @@ async function subscribeNewsletter() {
 </script>
 
 <template>
+    <!-- Custom cursor (desktop only) -->
+    <DotCursor />
+
     <!-- Skip link -->
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
