@@ -29,7 +29,7 @@ const simTab = ref('maritime') // 'maritime' | 'aerien'
 
 // MARITIME
 const m = ref({ longueur: '', largeur: '', hauteur: '', quantite: 1 })
-const TARIF_FRET_CBM = 250_000
+const TARIF_FRET_CBM = 260_000
 
 const simMaritime = computed(() => {
     const l = parseFloat(m.value.longueur) || 0
@@ -271,7 +271,7 @@ const timeline = [
                         <!-- Note info -->
                         <div class="mt-4 flex gap-2 text-xs text-gray-600 items-start">
                             <Info class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                            <p>Tarif indicatif CBM × 250 000 FCFA. Les prix réels varient selon la saison, le port d'embarquement et le type de marchandise.</p>
+                            <p>Tarif indicatif CBM × 260 000 FCFA. Les prix réels varient selon la saison, le port d'embarquement et le type de marchandise.</p>
                         </div>
                     </div>
                 </div>
