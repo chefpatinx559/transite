@@ -46,7 +46,9 @@ function submit() {
 </script>
 
 <template>
-    <Head title="Checkout" />
+    <Head title="Finaliser ma commande">
+        <meta name="robots" content="noindex, nofollow" />
+    </Head>
     <AppLayout>
 
         <!-- Header -->
@@ -101,7 +103,7 @@ function submit() {
                         <ul class="space-y-3 mb-5" role="list" aria-label="Articles commandés">
                             <li
                                 v-for="item in items"
-                                :key="item.id"
+                                :key="item.product_id"
                                 class="flex items-center gap-3"
                             >
                                 <div class="w-10 h-10 bg-gray-100 rounded-[8px] flex items-center justify-center flex-shrink-0 overflow-hidden">

@@ -37,7 +37,7 @@ function statusBadge(status) {
 const statCards = [
     {
         label: 'Commandes',
-        valueKey: 'orders_count',
+        valueKey: 'total_orders',
         icon: ShoppingBag,
         color: 'bg-[#F4620A]/10 text-[#F4620A]',
     },
@@ -49,8 +49,8 @@ const statCards = [
         isPrice: true,
     },
     {
-        label: 'Devis en attente',
-        valueKey: 'pending_count',
+        label: 'En attente',
+        valueKey: 'pending_orders',
         icon: Clock,
         color: 'bg-amber-50 text-amber-600',
     },
@@ -98,7 +98,7 @@ const statCards = [
                 <h2 id="recent-orders-title" class="font-heading font-bold text-lg text-[#0D0D0D]">
                     Dernières commandes
                 </h2>
-                <a href="/client/commandes" class="text-[#F4620A] text-sm font-semibold hover:underline">
+                <a href="/espace-client/commandes" class="text-[#F4620A] text-sm font-semibold hover:underline">
                     Tout voir
                 </a>
             </div>

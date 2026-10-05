@@ -3,7 +3,7 @@ import { dashboardApi } from '@/api/endpoints'
 import { useAuth } from '@/context/AuthContext'
 import { useTheme } from '@/context/ThemeContext'
 import { StatCard } from '@/components/ui/card'
-import { Badge, orderStatusBadge, orderStatusLabel } from '@/components/ui/badge'
+import { Badge, orderStatusBadge, orderStatusLabel, quoteStatusBadge, quoteStatusLabel } from '@/components/ui/badge'
 import { formatPrice, formatDate } from '@/lib/utils'
 import {
   Users, ShoppingCart, TrendingUp, MessageSquare,
@@ -122,8 +122,8 @@ export default function DashboardPage() {
                     <p className="font-medium text-[#0D0D0D] dark:text-white text-xs truncate">{q.name as string}</p>
                     <p className="text-gray-400 dark:text-gray-500 text-[11px] mt-0.5 truncate">{q.product_description as string}</p>
                   </div>
-                  <Badge variant={(q.status_badge as 'blue') ?? 'gray'} className="shrink-0">
-                    {q.status as string}
+                  <Badge variant={quoteStatusBadge[q.status as string] ?? 'gray'} className="shrink-0">
+                    {quoteStatusLabel[q.status as string] ?? (q.status as string)}
                   </Badge>
                 </div>
               </li>

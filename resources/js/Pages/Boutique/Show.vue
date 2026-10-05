@@ -60,12 +60,15 @@ function addRelatedToCart(product) {
 <template>
     <Head :title="`${product.name} — Boutique`">
         <meta name="description" :content="product.short_description || `Achetez ${product.name} sur NETSPRING — Livraison en Côte d'Ivoire depuis la Chine.`" />
+        <link rel="canonical" :href="`https://netspring.business/boutique/${product.slug}`" />
         <meta property="og:title" :content="`${product.name} — NETSPRING`" />
         <meta property="og:description" :content="product.short_description || `${product.name} disponible sur NETSPRING.`" />
         <meta property="og:type" content="product" />
+        <meta property="og:url" :content="`https://netspring.business/boutique/${product.slug}`" />
         <meta property="og:image" :content="product.images?.[0]?.url ?? product.images?.[0] ?? ''" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" :content="product.name" />
+        <meta name="twitter:description" :content="product.short_description || `${product.name} disponible sur NETSPRING.`" />
         <meta name="twitter:image" :content="product.images?.[0]?.url ?? product.images?.[0] ?? ''" />
     </Head>
     <div v-html="productSchemaTag" style="display:none" />
@@ -274,38 +277,33 @@ function addRelatedToCart(product) {
                     class="bg-white rounded-[16px] shadow-[0_8px_32px_rgba(0,0,0,0.09)] overflow-hidden group hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.14)] transition-all duration-[220ms]"
                     role="listitem"
                 >
-                    <div class="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-                        <img
-                            v-if="item.image"
-                            :src="item.image"
-                            :alt="item.name"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[300ms]"
-                            loading="lazy"
-                        />
-                        <Package v-else class="w-10 h-10 text-gray-300" aria-hidden="true" />
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-heading font-bold text-[#0D0D0D] text-sm mb-2 line-clamp-2">{{ item.name }}</h3>
-                        <div class="flex items-baseline gap-2 mb-3">
-                            <span class="text-[#F4620A] font-bold text-sm">{{ formatPrice(item.price) }}</span>
+                    <Link :href="`/boutique/${item.slug}`" class="block">
+                        <div class="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                            <img
+                                v-if="item.images && item.images.length"
+                                :src="item.images[0]?.url ?? item.images[0]"
+                                :alt="item.name"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[300ms]"
+                                loading="lazy"
+                            />
+                            <Package v-else class="w-10 h-10 text-gray-300" aria-hidden="true" />
                         </div>
-                        <div class="flex gap-2">
-                            <button
-                                class="flex-1 flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-2 rounded-[9px] transition-all duration-[220ms] cursor-pointer"
-                                :aria-label="`Ajouter ${item.name} au panier`"
-                                @click="addRelatedToCart(item)"
-                            >
-                                <ShoppingCart class="w-3.5 h-3.5" aria-hidden="true" />
-                                Ajouter
-                            </button>
-                            <Link
-                                :href="`/boutique/${item.slug}`"
-                                class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-[9px] transition-all duration-[220ms]"
-                                :aria-label="`Voir ${item.name}`"
-                            >
-                                <Eye class="w-3.5 h-3.5 text-gray-600" aria-hidden="true" />
-                            </Link>
+                        <div class="p-4">
+                            <h3 class="font-heading font-bold text-[#0D0D0D] text-sm mb-2 line-clamp-2">{{ item.name }}</h3>
+                            <div class="flex items-baseline gap-2 mb-3">
+                                <span class="text-[#F4620A] font-bold text-sm">{{ formatPrice(item.price) }}</span>
+                            </div>
                         </div>
+                    </Link>
+                    <div class="px-4 pb-4">
+                        <button
+                            class="w-full flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-2 rounded-[9px] transition-all duration-[220ms] cursor-pointer"
+                            :aria-label="`Ajouter ${item.name} au panier`"
+                            @click="addRelatedToCart(item)"
+                        >
+                            <ShoppingCart class="w-3.5 h-3.5" aria-hidden="true" />
+                            Ajouter au panier
+                        </button>
                     </div>
                 </article>
             </div>

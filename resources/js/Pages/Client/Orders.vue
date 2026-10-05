@@ -27,7 +27,7 @@ function statusBadge(status) {
 
 function applyFilter(val) {
     statusFilter.value = val
-    router.get('/client/commandes', { status: val || undefined }, {
+    router.get('/espace-client/commandes', { status: val || undefined }, {
         preserveState: true, replace: true
     })
 }
@@ -114,7 +114,7 @@ function formatDate(val) {
                                 #{{ order.order_number ?? order.id }}
                             </td>
                             <td class="px-5 py-4 text-gray-500 whitespace-nowrap">{{ formatDate(order.created_at) }}</td>
-                            <td class="px-5 py-4 text-gray-500">{{ order.items_count ?? '—' }} article(s)</td>
+                            <td class="px-5 py-4 text-gray-500">{{ order.items_count ?? 0 }} article(s)</td>
                             <td class="px-5 py-4 font-bold text-[#F4620A] whitespace-nowrap">{{ formatPrice(order.total) }}</td>
                             <td class="px-5 py-4">
                                 <span

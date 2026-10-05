@@ -61,7 +61,7 @@ const courseSchemaTag = computed(() => {
                 availability: isFull.value ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
             },
         }),
-        ...(props.formation.mode && { courseMode: props.formation.mode }),
+        ...(props.formation.type && { courseMode: props.formation.type === 'online' ? 'online' : 'onsite' }),
     })
     return `<script type="application/ld+json">${data}<\/script>`
 })
@@ -70,12 +70,15 @@ const courseSchemaTag = computed(() => {
 <template>
     <Head :title="`${formation.title} — Formations`">
         <meta name="description" :content="formation.excerpt || `Inscrivez-vous à la formation ${formation.title} — NETSPRING Côte d'Ivoire.`" />
+        <link rel="canonical" :href="`https://netspring.business/formations/${formation.slug}`" />
         <meta property="og:title" :content="`${formation.title} — NETSPRING`" />
         <meta property="og:description" :content="formation.excerpt || formation.title" />
         <meta property="og:type" content="article" />
+        <meta property="og:url" :content="`https://netspring.business/formations/${formation.slug}`" />
         <meta property="og:image" :content="coverUrl(formation.cover_image)" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" :content="formation.title" />
+        <meta name="twitter:description" :content="formation.excerpt || formation.title" />
         <meta name="twitter:image" :content="coverUrl(formation.cover_image)" />
     </Head>
     <div v-html="courseSchemaTag" style="display:none" />

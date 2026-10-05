@@ -9,10 +9,9 @@ import {
 const sidebarOpen = ref(false)
 
 const nav = [
-    { label: 'Tableau de bord', href: '/client/dashboard', icon: LayoutDashboard },
-    { label: 'Mes commandes',   href: '/client/commandes',  icon: ShoppingBag },
-    { label: 'Mes formations',  href: '/client/formations', icon: BookOpen },
-    { label: 'Mon profil',      href: '/client/profil',     icon: User },
+    { label: 'Tableau de bord', href: '/espace-client',             icon: LayoutDashboard },
+    { label: 'Mes commandes',   href: '/espace-client/commandes',   icon: ShoppingBag },
+    { label: 'Mes formations',  href: '/espace-client/formations',  icon: BookOpen },
 ]
 
 function logout() {

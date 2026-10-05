@@ -15,7 +15,7 @@ const form = useForm({
     name: '', email: '', whatsapp: '', city: '',
     product_description: '', quantity: '', budget: '',
     source_country: 'Chine', experience_level: '',
-    transport: '', message: '',
+    transport: '', notes: '',
 })
 
 function submit() {
@@ -462,8 +462,8 @@ const timeline = [
                 </div>
 
                 <div class="mt-6">
-                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1.5">Message complémentaire</label>
-                    <textarea id="message" v-model="form.message" rows="3" placeholder="Informations supplémentaires, urgence, questions..."
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1.5">Message complémentaire</label>
+                    <textarea id="notes" v-model="form.notes" rows="3" placeholder="Informations supplémentaires, urgence, questions..."
                               class="w-full border border-[#E5E7EB] rounded-[10px] px-4 py-3 text-sm text-[#0D0D0D] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F4620A] focus:border-transparent transition-all resize-none"></textarea>
                 </div>
 

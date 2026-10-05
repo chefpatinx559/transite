@@ -26,6 +26,8 @@ class QuoteController extends Controller
             'experience_level' => 'nullable|in:debutant,intermediaire,avance',
             'services' => 'nullable|array',
             'services.*' => 'string|max:100',
+            'transport' => 'nullable|string|max:50',
+            'notes' => 'nullable|string|max:5000',
         ]);
 
         QuoteRequest::create(array_merge($validated, [

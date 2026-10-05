@@ -10,7 +10,8 @@ class QuoteRequest extends Model
     protected $fillable = [
         'user_id', 'name', 'email', 'whatsapp', 'city',
         'product_description', 'quantity', 'budget', 'source_country',
-        'experience_level', 'services', 'status', 'admin_notes',
+        'experience_level', 'services', 'transport', 'notes',
+        'status', 'admin_notes',
     ];
 
     protected $casts = [

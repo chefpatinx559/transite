@@ -33,7 +33,9 @@ function removeItem(item) {
 </script>
 
 <template>
-    <Head title="Mon panier" />
+    <Head title="Mon panier">
+        <meta name="robots" content="noindex, nofollow" />
+    </Head>
     <AppLayout>
 
         <!-- Page header -->

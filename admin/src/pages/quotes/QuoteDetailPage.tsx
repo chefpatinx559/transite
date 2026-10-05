@@ -14,24 +14,21 @@ import { useToast } from '@/hooks/useToast'
 
 interface Quote {
   id: number
-  first_name?: string
-  last_name?: string
-  name?: string
+  name: string
   email: string
   whatsapp?: string
-  phone?: string
   city?: string
-  country_source?: string
-  experience?: string
-  company?: string
-  product?: string
-  service?: string
-  description?: string
+  source_country?: string
+  experience_level?: string
+  product_description?: string
   services?: string[]
+  transport?: string
+  notes?: string
   quantity?: number | string | null
   budget?: string | number | null
   status: string
   admin_notes?: string
+  user_id?: number | null
   created_at: string
   updated_at?: string
 }
@@ -49,8 +46,7 @@ const QUOTE_STATUSES = [
 ]
 
 function getQuoteName(quote: Quote): string {
-  if (quote.name) return quote.name
-  return [quote.first_name, quote.last_name].filter(Boolean).join(' ') || '—'
+  return quote.name || '—'
 }
 
 export default function QuoteDetailPage() {
@@ -138,16 +134,16 @@ export default function QuoteDetailPage() {
                   {quote.email}
                 </a>
               </div>
-              {(quote.whatsapp ?? quote.phone) && (
+              {quote.whatsapp && (
                 <div>
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">WhatsApp</p>
                   <a
-                    href={`https://wa.me/${(quote.whatsapp ?? quote.phone ?? '').replace(/\D/g, '')}`}
+                    href={`https://wa.me/${quote.whatsapp.replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-emerald-600 hover:underline"
                   >
-                    {quote.whatsapp ?? quote.phone}
+                    {quote.whatsapp}
                   </a>
                 </div>
               )}
@@ -157,16 +153,10 @@ export default function QuoteDetailPage() {
                   <p className="text-gray-700">{quote.city}</p>
                 </div>
               )}
-              {quote.experience && (
+              {quote.experience_level && (
                 <div>
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Expérience</p>
-                  <p className="text-gray-700">{quote.experience}</p>
-                </div>
-              )}
-              {quote.company && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Entreprise</p>
-                  <p className="text-gray-700">{quote.company}</p>
+                  <p className="text-gray-700">{quote.experience_level}</p>
                 </div>
               )}
             </CardContent>
@@ -176,19 +166,11 @@ export default function QuoteDetailPage() {
           <Card>
             <CardHeader title="Détails du projet" />
             <CardContent className="space-y-4 text-sm">
-              {(quote.product ?? quote.service) && (
+              {quote.product_description && (
                 <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                    Produit / Service
-                  </p>
-                  <p className="text-gray-700">{quote.product ?? quote.service}</p>
-                </div>
-              )}
-              {quote.description && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Description</p>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Description du produit</p>
                   <div className="bg-gray-50 rounded-[10px] px-4 py-3 text-gray-700 whitespace-pre-wrap leading-relaxed">
-                    {quote.description}
+                    {quote.product_description}
                   </div>
                 </div>
               )}
@@ -205,13 +187,19 @@ export default function QuoteDetailPage() {
                     <p className="text-gray-700 font-semibold">{formatPrice(quote.budget)}</p>
                   </div>
                 )}
-                {quote.country_source && (
+                {quote.source_country && (
                   <div>
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Pays source</p>
-                    <p className="text-gray-700">{quote.country_source}</p>
+                    <p className="text-gray-700">{quote.source_country}</p>
                   </div>
                 )}
               </div>
+              {quote.transport && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Transport souhaité</p>
+                  <p className="text-gray-700">{quote.transport}</p>
+                </div>
+              )}
               {quote.services && quote.services.length > 0 && (
                 <div>
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Services demandés</p>
@@ -219,6 +207,14 @@ export default function QuoteDetailPage() {
                     {quote.services.map((s, i) => (
                       <Badge key={i} variant="blue">{s}</Badge>
                     ))}
+                  </div>
+                </div>
+              )}
+              {quote.notes && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Message du client</p>
+                  <div className="bg-gray-50 rounded-[10px] px-4 py-3 text-gray-700 whitespace-pre-wrap leading-relaxed">
+                    {quote.notes}
                   </div>
                 </div>
               )}

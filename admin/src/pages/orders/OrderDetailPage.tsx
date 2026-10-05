@@ -12,42 +12,47 @@ import { useToast } from '@/hooks/useToast'
 
 interface OrderItem {
   id: number
-  product?: { name: string; photo_url?: string | null; type?: string }
-  product_name?: string
-  product_type?: string
+  name: string
+  price: number | string
   quantity: number
-  unit_price: number | string
   subtotal?: number | string
+  item_type?: string
+  image?: string | null
+  product?: { name: string; images?: (string | { url?: string })[] | null; type?: string }
 }
 
 interface OrderAddress {
-  line1?: string
-  line2?: string
+  address?: string
   city?: string
   country?: string
-  postal_code?: string
-  notes?: string
 }
 
 interface OrderUser {
   id?: number
-  name: string
+  first_name?: string
+  last_name?: string
   email: string
-  phone?: string
+  whatsapp?: string
 }
 
 interface Order {
   id: number
+  order_number?: string
   reference?: string
   status: string
   payment_status?: string
+  payment_method?: string
+  payment_ref?: string
   transaction_reference?: string
   subtotal?: number | string
   shipping_cost?: number | string
-  discount?: number | string
+  discount_amount?: number | string
   total: number | string
   items: OrderItem[]
   user?: OrderUser
+  customer_name?: string
+  customer_email?: string
+  customer_phone?: string
   shipping_address?: OrderAddress
   notes?: string
   created_at: string
@@ -126,7 +131,7 @@ export default function OrderDetailPage() {
         </Button>
         <div>
           <h1 className="font-sans font-bold text-2xl text-[#0D0D0D]">
-            Commande #{order.reference ?? order.id}
+            Commande #{order.order_number ?? order.reference ?? order.id}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">{formatDateTime(order.created_at)}</p>
         </div>
@@ -144,14 +149,16 @@ export default function OrderDetailPage() {
             <CardHeader title="Articles commandés" />
             <div className="divide-y divide-[#E5E7EB]">
               {order.items.map(item => {
-                const name = item.product?.name ?? item.product_name ?? '—'
-                const itemType = item.product?.type ?? item.product_type
-                const subtotal = item.subtotal ?? (Number(item.unit_price) * item.quantity)
+                const name = item.product?.name ?? item.name ?? '—'
+                const itemType = item.product?.type ?? item.item_type
+                const subtotal = item.subtotal ?? (Number(item.price) * item.quantity)
+                const imgRaw = item.image ?? item.product?.images?.[0]
+                const imgUrl = typeof imgRaw === 'string' ? imgRaw : imgRaw?.url
                 return (
                   <div key={item.id} className="flex items-center gap-4 px-6 py-4">
-                    {item.product?.photo_url ? (
+                    {imgUrl ? (
                       <img
-                        src={item.product.photo_url}
+                        src={imgUrl}
                         alt={name}
                         className="w-12 h-12 rounded-[8px] object-cover border border-[#E5E7EB] flex-shrink-0"
                       />
@@ -168,7 +175,7 @@ export default function OrderDetailPage() {
                         )}
                       </div>
                       <p className="text-sm text-gray-500">
-                        {formatPrice(item.unit_price)} × {item.quantity}
+                        {formatPrice(item.price)} × {item.quantity}
                       </p>
                     </div>
                     <p className="font-bold text-[#0D0D0D] flex-shrink-0">
@@ -191,10 +198,10 @@ export default function OrderDetailPage() {
                   <span>{formatPrice(order.shipping_cost)}</span>
                 </div>
               )}
-              {order.discount != null && Number(order.discount) > 0 && (
+              {order.discount_amount != null && Number(order.discount_amount) > 0 && (
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Remise</span>
-                  <span className="text-emerald-600">-{formatPrice(order.discount)}</span>
+                  <span className="text-emerald-600">-{formatPrice(order.discount_amount)}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold text-[#0D0D0D] text-base pt-2 border-t border-[#E5E7EB]">
@@ -208,25 +215,27 @@ export default function OrderDetailPage() {
           <Card>
             <CardHeader title="Informations client" />
             <CardContent className="space-y-3 text-sm">
-              <p className="font-semibold text-[#0D0D0D] text-base">{order.user?.name ?? '—'}</p>
-              {order.user?.email && (
+              <p className="font-semibold text-[#0D0D0D] text-base">{order.customer_name ?? '—'}</p>
+              {order.customer_email && (
                 <a
-                  href={`mailto:${order.user.email}`}
+                  href={`mailto:${order.customer_email}`}
                   className="block text-[#F4620A] hover:underline"
                 >
-                  {order.user.email}
+                  {order.customer_email}
                 </a>
               )}
-              {order.user?.phone && (
+              {order.customer_phone && (
                 <a
-                  href={`tel:${order.user.phone}`}
+                  href={`tel:${order.customer_phone}`}
                   className="block text-gray-600 hover:underline"
                 >
-                  {order.user.phone}
+                  {order.customer_phone}
                 </a>
               )}
-              {order.user?.id && (
-                <p className="text-xs text-gray-400">Compte client #{order.user.id}</p>
+              {order.user && (
+                <p className="text-xs text-gray-400">
+                  Compte : {[order.user.first_name, order.user.last_name].filter(Boolean).join(' ')} (#{order.user.id})
+                </p>
               )}
             </CardContent>
           </Card>
@@ -236,17 +245,12 @@ export default function OrderDetailPage() {
             <Card>
               <CardHeader title="Adresse de livraison" />
               <CardContent className="text-sm text-gray-600 space-y-1">
-                {order.shipping_address.line1 && <p>{order.shipping_address.line1}</p>}
-                {order.shipping_address.line2 && <p>{order.shipping_address.line2}</p>}
-                {(order.shipping_address.postal_code || order.shipping_address.city) && (
-                  <p>
-                    {[order.shipping_address.postal_code, order.shipping_address.city].filter(Boolean).join(' ')}
-                  </p>
-                )}
+                {order.shipping_address.address && <p>{order.shipping_address.address}</p>}
+                {order.shipping_address.city && <p>{order.shipping_address.city}</p>}
                 {order.shipping_address.country && <p>{order.shipping_address.country}</p>}
-                {order.shipping_address.notes && (
+                {order.notes && (
                   <p className="mt-2 pt-2 border-t border-[#E5E7EB] text-gray-500 italic">
-                    {order.shipping_address.notes}
+                    {order.notes}
                   </p>
                 )}
               </CardContent>
@@ -300,9 +304,9 @@ export default function OrderDetailPage() {
                       {order.payment_status === 'paid' ? 'Payé' : order.payment_status}
                     </Badge>
                   </div>
-                  {order.transaction_reference && (
+                  {(order.payment_ref ?? order.transaction_reference) && (
                     <p className="text-xs text-gray-400 font-mono break-all">
-                      Réf. : {order.transaction_reference}
+                      Réf. : {order.payment_ref ?? order.transaction_reference}
                     </p>
                   )}
                 </div>

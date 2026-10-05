@@ -30,19 +30,49 @@ function share() {
         navigator.clipboard.writeText(window.location.href)
     }
 }
+
+import { computed } from 'vue'
+
+const articleSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: props.post.title,
+        description: props.post.excerpt || props.post.title,
+        image: coverUrl(props.post.cover_image),
+        datePublished: props.post.published_at || props.post.created_at,
+        dateModified: props.post.updated_at || props.post.created_at,
+        author: {
+            '@type': 'Organization',
+            name: 'NETSPRING',
+            url: 'https://netspring.business',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'NETSPRING',
+            url: 'https://netspring.business',
+        },
+        mainEntityOfPage: `https://netspring.business/blog/${props.post.slug}`,
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
 </script>
 
 <template>
     <Head :title="`${post.title} — Blog`">
         <meta name="description" :content="post.excerpt || `Article du blog NETSPRING : ${post.title}`" />
+        <link rel="canonical" :href="`https://netspring.business/blog/${post.slug}`" />
         <meta property="og:title" :content="`${post.title} — Blog NETSPRING`" />
         <meta property="og:description" :content="post.excerpt || post.title" />
         <meta property="og:type" content="article" />
+        <meta property="og:url" :content="`https://netspring.business/blog/${post.slug}`" />
         <meta property="og:image" :content="coverUrl(post.cover_image)" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" :content="post.title" />
         <meta name="twitter:description" :content="post.excerpt || post.title" />
         <meta name="twitter:image" :content="coverUrl(post.cover_image)" />
     </Head>
+    <div v-html="articleSchemaTag" style="display:none" />
     <AppLayout>
 
     <!-- ── HERO ARTICLE ───────────────────────── -->

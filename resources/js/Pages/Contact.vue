@@ -5,7 +5,7 @@ import { useForm } from '@inertiajs/vue3'
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, MessageSquare } from 'lucide-vue-next'
 
 const form = useForm({
-    name: '', email: '', whatsapp: '', subject: '', message: '',
+    name: '', email: '', phone: '', subject: '', message: '',
 })
 
 function submit() {
@@ -71,8 +71,8 @@ const contacts = [
                         </div>
 
                         <div>
-                            <label for="c-whatsapp" class="block text-sm font-medium text-gray-700 mb-1.5">WhatsApp</label>
-                            <input id="c-whatsapp" v-model="form.whatsapp" type="tel" autocomplete="tel" placeholder="+225 0700000000"
+                            <label for="c-phone" class="block text-sm font-medium text-gray-700 mb-1.5">Téléphone / WhatsApp</label>
+                            <input id="c-phone" v-model="form.phone" type="tel" autocomplete="tel" placeholder="+225 0700000000"
                                    class="w-full border border-[#E5E7EB] rounded-[10px] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#F4620A] focus:border-transparent transition-all" />
                         </div>
 
