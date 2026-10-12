@@ -1,8 +1,8 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
-import { Search, Package, ShoppingCart, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { Search, Package, ShoppingCart, SlidersHorizontal } from 'lucide-vue-next'
 
 const props = defineProps({
     products:   { type: Object, default: () => ({ data: [], links: [], meta: {} }) },
@@ -12,6 +12,22 @@ const props = defineProps({
 
 const search          = ref(props.filters?.search ?? '')
 const activeCategory  = ref(props.filters?.categorie ?? '')
+
+const allProducts  = ref([...props.products.data])
+const nextPageUrl  = ref(props.products.next_page_url)
+const loadingMore  = ref(false)
+const sentinel     = ref(null)
+let observer       = null
+
+watch(() => props.products, (val) => {
+    if (val.current_page === 1) {
+        allProducts.value = [...val.data]
+    } else {
+        const ids = new Set(allProducts.value.map(p => p.id))
+        allProducts.value.push(...val.data.filter(p => !ids.has(p.id)))
+    }
+    nextPageUrl.value = val.next_page_url
+})
 
 function formatPrice(val) {
     return Number(val).toLocaleString('fr-FR') + ' FCFA'
@@ -41,6 +57,26 @@ function minShipping(p) {
         .map(Number)
     return prices.length ? Math.min(...prices) : null
 }
+
+function loadMore() {
+    if (!nextPageUrl.value || loadingMore.value) return
+    loadingMore.value = true
+    router.get(nextPageUrl.value, {}, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ['products'],
+        onFinish: () => { loadingMore.value = false },
+    })
+}
+
+onMounted(() => {
+    observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) loadMore()
+    }, { rootMargin: '300px' })
+    nextTick(() => { if (sentinel.value) observer.observe(sentinel.value) })
+})
+
+onUnmounted(() => { observer?.disconnect() })
 </script>
 
 <template>
@@ -129,7 +165,7 @@ function minShipping(p) {
 
             <!-- Empty state -->
             <div
-                v-if="!products.data || !products.data.length"
+                v-if="!allProducts.length"
                 class="flex flex-col items-center justify-center py-24 text-center"
                 role="status"
                 aria-live="polite"
@@ -149,7 +185,7 @@ function minShipping(p) {
                 aria-label="Liste des produits"
             >
                 <Link
-                    v-for="product in products.data"
+                    v-for="product in allProducts"
                     :key="product.id"
                     :href="`/boutique/${product.slug}`"
                     class="card-lift bg-white rounded-[16px] shadow-[0_2px_12px_rgba(0,0,0,0.06)] overflow-hidden group cursor-pointer"
@@ -205,38 +241,17 @@ function minShipping(p) {
                             @click.prevent="addToCart(product)"
                         >
                             <ShoppingCart class="w-3.5 h-3.5" aria-hidden="true" />
-                            Ajouter au panier
+                            Acheter
                         </button>
                     </div>
                 </Link>
             </div>
 
-            <!-- Pagination -->
-            <nav
-                v-if="products.links && products.links.length > 3"
-                class="mt-12 flex items-center justify-center gap-2"
-                aria-label="Pagination des produits"
-            >
-                <template v-for="link in products.links" :key="link.label">
-                    <Link
-                        v-if="link.url"
-                        :href="link.url"
-                        class="flex items-center justify-center w-9 h-9 rounded-[9px] text-sm font-medium transition-all duration-[220ms]"
-                        :class="link.active
-                            ? 'bg-[#F4620A] text-white shadow-[0_4px_12px_rgba(244,98,10,0.35)]'
-                            : 'bg-white border border-gray-200 text-gray-600 hover:border-[#F4620A] hover:text-[#F4620A]'"
-                        :aria-label="`Page ${link.label}`"
-                        :aria-current="link.active ? 'page' : undefined"
-                        v-html="link.label"
-                    />
-                    <span
-                        v-else
-                        class="flex items-center justify-center w-9 h-9 rounded-[9px] text-sm text-gray-300 bg-gray-50"
-                        aria-hidden="true"
-                        v-html="link.label"
-                    />
-                </template>
-            </nav>
+            <!-- Infinite scroll sentinel -->
+            <div ref="sentinel" class="h-px" aria-hidden="true" />
+            <div v-if="loadingMore" class="flex justify-center py-10">
+                <div class="w-8 h-8 border-3 border-[#F4620A]/30 border-t-[#F4620A] rounded-full animate-spin" />
+            </div>
         </section>
     </AppLayout>
 </template>

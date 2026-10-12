@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link, router } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
-import { Package, ShoppingCart, CheckCircle, AlertCircle, ChevronLeft, Eye, Truck, Plane, Ship } from 'lucide-vue-next'
+import { Package, ShoppingCart, ChevronLeft, Eye, Truck, Plane, Ship } from 'lucide-vue-next'
 
 const props = defineProps({
     product: { type: Object, required: true },
@@ -157,18 +157,6 @@ function addRelatedToCart(product) {
                         >PROMO</span>
                     </div>
 
-                    <!-- Stock -->
-                    <div class="flex items-center gap-2">
-                        <CheckCircle v-if="product.stock > 0" class="w-4.5 h-4.5 text-emerald-500" aria-hidden="true" />
-                        <AlertCircle v-else class="w-4.5 h-4.5 text-red-500" aria-hidden="true" />
-                        <span
-                            class="text-sm font-medium"
-                            :class="product.stock > 0 ? 'text-emerald-600' : 'text-red-500'"
-                        >
-                            {{ product.stock > 0 ? `En stock (${product.stock} disponibles)` : 'Rupture de stock' }}
-                        </span>
-                    </div>
-
                     <!-- Short description -->
                     <p v-if="product.short_description" class="text-gray-600 text-base leading-relaxed">
                         {{ product.short_description }}
@@ -255,7 +243,7 @@ function addRelatedToCart(product) {
                     Description du produit
                 </h2>
                 <div
-                    class="prose prose-gray max-w-none text-gray-600 leading-relaxed"
+                    class="prose prose-gray max-w-none text-gray-600 leading-relaxed whitespace-pre-line"
                     v-html="product.description"
                 />
             </div>
