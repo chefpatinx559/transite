@@ -150,13 +150,13 @@ const articleSchemaTag = computed(() => {
                     </div>
 
                     <!-- Chapô -->
-                    <p v-if="post.excerpt" class="text-lg text-gray-600 leading-[1.8] mb-8 font-medium border-l-4 border-[#F4620A] pl-5 italic">
+                    <p v-if="post.excerpt" class="text-lg text-gray-600 leading-[1.8] mb-8 font-medium border-l-4 border-[#F4620A] pl-5 italic whitespace-pre-line">
                         {{ post.excerpt }}
                     </p>
 
                     <!-- Corps de l'article -->
                     <div
-                        class="prose prose-lg max-w-none
+                        class="prose prose-lg max-w-none whitespace-pre-line
                                prose-headings:font-heading prose-headings:font-bold prose-headings:text-[#0D0D0D]
                                prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
                                prose-p:text-gray-600 prose-p:leading-[1.8]
