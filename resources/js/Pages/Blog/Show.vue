@@ -156,14 +156,16 @@ const articleSchemaTag = computed(() => {
 
                     <!-- Corps de l'article -->
                     <div
-                        class="prose prose-lg max-w-none whitespace-pre-line
+                        class="prose prose-lg max-w-none
                                prose-headings:font-heading prose-headings:font-bold prose-headings:text-[#0D0D0D]
                                prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
                                prose-p:text-gray-600 prose-p:leading-[1.8]
                                prose-a:text-[#F4620A] prose-a:no-underline hover:prose-a:underline
                                prose-strong:text-[#0D0D0D]
                                prose-ul:text-gray-600 prose-ol:text-gray-600
-                               prose-li:marker:text-[#F4620A]"
+                               prose-li:marker:text-[#F4620A]
+                               prose-img:rounded-[12px] prose-img:shadow-md
+                               prose-blockquote:border-[#F4620A] prose-blockquote:text-gray-500"
                         v-html="post.content"
                         aria-label="Contenu de l'article"
                     ></div>

@@ -106,3 +106,91 @@ html.dark .border-b             { border-bottom-color: rgba(255, 255, 255, 0.1);
 /* Shadow légère en dark inutile */
 html.dark .shadow-\[0_2px_8px_rgba\(0\,0\,0\,0\.04\)\] { box-shadow: none; }
 html.dark .shadow-\[0_24px_60px_rgba\(0\,0\,0\,0\.3\)\] { box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
+
+/* ── Quill WYSIWYG Editor ───────────────────────────── */
+.quill-editor-wrapper .ql-toolbar.ql-snow {
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: hsl(var(--color-muted));
+}
+.quill-editor-wrapper .ql-container.ql-snow {
+  border: 1px solid hsl(var(--color-border));
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  min-height: 350px;
+}
+.quill-editor-wrapper .ql-editor {
+  min-height: 350px;
+  line-height: 1.7;
+  color: hsl(var(--color-foreground));
+}
+.quill-editor-wrapper .ql-editor.ql-blank::before {
+  color: hsl(var(--color-muted-foreground));
+  font-style: normal;
+}
+.quill-editor-wrapper .ql-snow .ql-stroke {
+  stroke: hsl(var(--color-muted-foreground));
+}
+.quill-editor-wrapper .ql-snow .ql-fill,
+.quill-editor-wrapper .ql-snow .ql-stroke.ql-fill {
+  fill: hsl(var(--color-muted-foreground));
+}
+.quill-editor-wrapper .ql-snow .ql-picker {
+  color: hsl(var(--color-muted-foreground));
+}
+.quill-editor-wrapper .ql-snow .ql-picker-options {
+  background: hsl(var(--color-card));
+  border-color: hsl(var(--color-border));
+}
+.quill-editor-wrapper .ql-snow button:hover .ql-stroke,
+.quill-editor-wrapper .ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: var(--color-brand);
+}
+.quill-editor-wrapper .ql-snow button:hover .ql-fill,
+.quill-editor-wrapper .ql-snow .ql-picker-label:hover .ql-fill {
+  fill: var(--color-brand);
+}
+.quill-editor-wrapper .ql-snow button.ql-active .ql-stroke {
+  stroke: var(--color-brand);
+}
+.quill-editor-wrapper .ql-snow button.ql-active .ql-fill {
+  fill: var(--color-brand);
+}
+.quill-editor-wrapper .ql-snow .ql-picker-item.ql-selected,
+.quill-editor-wrapper .ql-snow .ql-picker-label.ql-active {
+  color: var(--color-brand);
+}
+.quill-editor-wrapper .ql-snow .ql-picker-item:hover {
+  color: var(--color-brand);
+}
+
+/* Dark mode Quill */
+html.dark .quill-editor-wrapper .ql-toolbar.ql-snow {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+html.dark .quill-editor-wrapper .ql-container.ql-snow {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #1e1e1e;
+}
+html.dark .quill-editor-wrapper .ql-editor {
+  color: rgba(255, 255, 255, 0.9);
+}
+html.dark .quill-editor-wrapper .ql-snow .ql-stroke {
+  stroke: rgba(255, 255, 255, 0.5);
+}
+html.dark .quill-editor-wrapper .ql-snow .ql-fill {
+  fill: rgba(255, 255, 255, 0.5);
+}
+html.dark .quill-editor-wrapper .ql-snow .ql-picker {
+  color: rgba(255, 255, 255, 0.5);
+}
+html.dark .quill-editor-wrapper .ql-snow .ql-picker-options {
+  background: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+html.dark .quill-editor-wrapper .ql-editor.ql-blank::before {
+  color: rgba(255, 255, 255, 0.3);
+}

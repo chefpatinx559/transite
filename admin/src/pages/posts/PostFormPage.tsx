@@ -11,6 +11,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { useToast } from '@/hooks/useToast'
+import ReactQuill from 'react-quill-new'
+import 'react-quill-new/dist/quill.snow.css'
 
 interface Category { id: number; name: string; type?: string }
 
@@ -27,6 +29,27 @@ interface PostData {
 }
 
 interface FormErrors { [key: string]: string | undefined }
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ indent: '-1' }, { indent: '+1' }],
+    ['blockquote', 'code-block'],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+}
+
+const quillFormats = [
+  'header', 'bold', 'italic', 'underline', 'strike',
+  'color', 'background', 'align',
+  'list', 'indent', 'blockquote', 'code-block',
+  'link', 'image', 'video',
+]
 
 export default function PostFormPage() {
   const { id } = useParams<{ id?: string }>()
@@ -267,15 +290,17 @@ export default function PostFormPage() {
       <Card>
         <CardHeader title="Contenu" />
         <CardContent className="space-y-2">
-          <Label htmlFor="content">Corps de l'article (HTML)</Label>
-          <Textarea
-            id="content"
-            rows={12}
-            value={form.content}
-            onChange={e => set('content', e.target.value)}
-            placeholder="Rédigez votre article ici…"
-            className="font-mono text-xs"
-          />
+          <Label>Corps de l'article</Label>
+          <div className="quill-editor-wrapper">
+            <ReactQuill
+              theme="snow"
+              value={form.content}
+              onChange={(value: string) => set('content', value === '<p><br></p>' ? '' : value)}
+              modules={quillModules}
+              formats={quillFormats}
+              placeholder="Rédigez votre article ici…"
+            />
+          </div>
           {errors.content && <p className="text-xs text-red-600">{errors.content}</p>}
         </CardContent>
       </Card>
