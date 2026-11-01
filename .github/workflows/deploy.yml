@@ -97,6 +97,9 @@ jobs:
             echo "PHP binary: $PHP"
             $PHP -v | head -1
 
+            # Redécouvrir les packages (exclut les dev-only comme boost)
+            $PHP artisan package:discover --ansi
+
             # Storage symlink
             $PHP artisan storage:link --force 2>/dev/null || true
 
