@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useReveal } from '@/composables/useReveal'
