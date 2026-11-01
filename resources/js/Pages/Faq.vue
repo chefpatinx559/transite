@@ -59,14 +59,20 @@ const faqSchemaTag = computed(() => {
 </script>
 
 <template>
-    <Head title="FAQ — Questions fréquentes">
-        <meta name="description" content="Trouvez les réponses à vos questions sur l'importation depuis la Chine : délais, coûts, documents, paiements, dédouanement en Côte d'Ivoire. FAQ NETSPRING." />
+    <Head title="FAQ Import Chine-CI — NETSPRING">
+        <meta name="description" content="Réponses aux questions sur l'importation Chine-CI : délais, coûts, documents douaniers, paiements, dédouanement. FAQ NETSPRING." />
         <link rel="canonical" href="https://netspring.business/faq" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="FAQ — Questions fréquentes | NETSPRING" />
         <meta property="og:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents douaniers, paiements sécurisés." />
         <meta property="og:url" content="https://netspring.business/faq" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="FAQ — Questions fréquentes | NETSPRING" />
         <meta name="twitter:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents, paiements." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
     <div v-html="faqSchemaTag" style="display:none" />
     <AppLayout>
@@ -90,7 +96,7 @@ const faqSchemaTag = computed(() => {
                 <button
                     v-for="cat in categories"
                     :key="cat.key ?? 'all'"
-                    class="px-4 py-2 rounded-full text-sm font-medium transition-all duration-[150ms] cursor-pointer"
+                    class="px-4 py-2 min-h-[44px] rounded-full text-sm font-medium transition-all duration-[150ms] cursor-pointer"
                     :class="activeCategory === cat.key
                         ? 'bg-[#F4620A] text-white shadow-sm'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"

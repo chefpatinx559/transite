@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\Admin\ProfileApiController;
 // ──────────────────────────────────────────────
 // AUTH (public)
 // ──────────────────────────────────────────────
-Route::post('/admin/login',  [AuthController::class, 'login']);
+Route::post('/admin/login',  [AuthController::class, 'login'])->middleware('throttle:login');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/admin/me',      [AuthController::class, 'me'])->middleware('auth:sanctum');
 

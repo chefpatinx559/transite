@@ -12,7 +12,8 @@ class UserApiController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = User::orderByDesc('created_at');
+        $query = User::select(['id', 'first_name', 'last_name', 'email', 'whatsapp', 'role', 'created_at'])
+            ->orderByDesc('created_at');
 
         if ($request->filled('q')) {
             $search = $request->q;
@@ -48,7 +49,7 @@ class UserApiController extends Controller
             'role'       => $request->role,
         ]);
 
-        return response()->json($user, 201);
+        return response()->json($user->only(['id', 'first_name', 'last_name', 'email', 'role', 'created_at']), 201);
     }
 
     public function updateRole(Request $request, User $user): JsonResponse

@@ -63,6 +63,34 @@ const articleSchemaTag = computed(() => {
     })
     return `<script type="application/ld+json">${data}<\/script>`
 })
+
+const breadcrumbSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Accueil',
+                item: 'https://netspring.business/',
+            },
+            {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Blog',
+                item: 'https://netspring.business/blog',
+            },
+            {
+                '@type': 'ListItem',
+                position: 3,
+                name: props.post.title,
+                item: `https://netspring.business/blog/${props.post.slug}`,
+            },
+        ],
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
 </script>
 
 <template>
@@ -80,6 +108,7 @@ const articleSchemaTag = computed(() => {
         <meta name="twitter:image" :content="coverUrl(post.cover_image)" />
     </Head>
     <div v-html="articleSchemaTag" style="display:none" />
+    <div v-html="breadcrumbSchemaTag" style="display:none" />
     <AppLayout>
 
     <!-- ── HERO ARTICLE ───────────────────────── -->

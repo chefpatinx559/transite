@@ -80,14 +80,20 @@ onUnmounted(() => { observer?.disconnect() })
 </script>
 
 <template>
-    <Head title="Boutique">
-        <meta name="description" content="Boutique NETSPRING : produits importés de Chine, livrés en Côte d'Ivoire. Textile, électronique, accessoires et plus. Paiement sécurisé." />
+    <Head title="Boutique NETSPRING — Produits Chine-CI">
+        <meta name="description" content="Boutique NETSPRING : produits importés de Chine, livrés en Côte d'Ivoire. Textile, électronique, accessoires. Paiement sécurisé." />
         <link rel="canonical" href="https://netspring.business/boutique" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="Boutique — Produits importés de Chine | NETSPRING" />
         <meta property="og:description" content="Découvrez notre sélection de produits importés directement de Chine. Livraison en Côte d'Ivoire, paiement sécurisé." />
         <meta property="og:url" content="https://netspring.business/boutique" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Boutique — NETSPRING" />
         <meta name="twitter:description" content="Produits importés de Chine, livrés en Côte d'Ivoire. Paiement sécurisé." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
     <AppLayout>
 

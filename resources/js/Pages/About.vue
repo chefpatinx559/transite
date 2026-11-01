@@ -21,14 +21,20 @@ const teamStats = [
 </script>
 
 <template>
-    <Head title="À propos">
-        <meta name="description" content="NETSPRING, votre pont commercial Chine – Côte d'Ivoire depuis 2022. Plus de 500 clients accompagnés, 1000+ commandes réalisées. Découvrez notre équipe et notre mission." />
+    <Head title="À propos — NETSPRING | Chine–Côte d'Ivoire">
+        <meta name="description" content="NETSPRING, votre pont commercial Chine-CI depuis 2022. 500+ clients, 1000+ commandes. Découvrez notre équipe, mission et vision." />
         <link rel="canonical" href="https://netspring.business/a-propos" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="À propos — NETSPRING | Commerce Chine – Côte d'Ivoire" />
         <meta property="og:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine. Découvrez notre histoire." />
         <meta property="og:url" content="https://netspring.business/a-propos" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="À propos — NETSPRING" />
         <meta name="twitter:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
     <AppLayout>
 
@@ -153,7 +159,7 @@ const teamStats = [
     </section>
 
     <!-- MISSION / VISION -->
-    <section class="py-20 bg-[#FAFAFA]" aria-label="Mission et vision NETSPRING">
+    <section class="py-20 bg-white" aria-label="Mission et vision NETSPRING">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-8">
                 <article class="bg-white rounded-[20px] p-8 border border-[#E5E7EB] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-[220ms]">

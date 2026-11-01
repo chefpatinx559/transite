@@ -58,18 +58,54 @@ const formationChecklist = [
     'E-commerce & vente en ligne', 'Importation A à Z depuis la Chine',
     'Négociation avec les fournisseurs', 'Logistique internationale',
 ]
+
+// Schema.org Organization
+const organizationSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'NETSPRING',
+        url: 'https://netspring.business',
+        logo: 'https://netspring.business/images/logo.png',
+        description: 'Votre pont commercial Chine-Côte d\'Ivoire. Importation, sourcing, formations et accompagnement personnalisé.',
+        address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Bouaké',
+            addressCountry: 'CI',
+        },
+        contactPoint: {
+            '@type': 'ContactPoint',
+            telephone: '+225-0712328489',
+            contactType: 'customer service',
+            areaServed: 'CI',
+            availableLanguage: 'fr',
+        },
+        sameAs: [
+            'https://www.facebook.com/profile.php?id=61574430440509',
+            'https://www.tiktok.com/@netspringbusiness',
+        ],
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
 </script>
 
 <template>
+    <div v-html="organizationSchemaTag" style="display:none" />
     <Head>
-        <title>Votre pont commercial Chine – Côte d'Ivoire</title>
-        <meta name="description" content="NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine : sourcing, négociation, transport, dédouanement et formations." />
+        <title>NETSPRING — Pont commercial Chine–Côte d'Ivoire</title>
+        <meta name="description" content="NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine : sourcing, négociation, transport, dédouanement. 500+ clients." />
         <link rel="canonical" href="https://netspring.business/" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
         <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
         <meta property="og:url" content="https://netspring.business/" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
         <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
 
     <AppLayout>

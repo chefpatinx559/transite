@@ -23,7 +23,7 @@ function submit() {
         <meta name="robots" content="noindex, nofollow" />
     </Head>
 
-    <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
+    <div class="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4 py-16">
         <div class="w-full max-w-md">
 
             <!-- Logo -->

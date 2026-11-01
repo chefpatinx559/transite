@@ -31,14 +31,20 @@ function coverUrl(path) {
 </script>
 
 <template>
-    <Head title="Blog — Conseils importation & commerce Chine-CI">
-        <meta name="description" content="Blog NETSPRING : articles, guides et conseils sur l'importation depuis la Chine, le commerce international et l'entrepreneuriat en Côte d'Ivoire." />
+    <Head title="Blog Import Chine-CI — NETSPRING">
+        <meta name="description" content="Blog NETSPRING : guides et conseils sur l'importation Chine-CI, commerce international, entrepreneuriat. Actualités et astuces pratiques." />
         <link rel="canonical" href="https://netspring.business/blog" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="Blog — Conseils Import Chine-CI | NETSPRING" />
         <meta property="og:description" content="Articles et guides sur l'importation depuis la Chine, le commerce international et l'entrepreneuriat en Côte d'Ivoire." />
         <meta property="og:url" content="https://netspring.business/blog" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Blog NETSPRING — Import Chine-CI" />
         <meta name="twitter:description" content="Articles et guides sur l'importation depuis la Chine et l'entrepreneuriat en Côte d'Ivoire." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
     <AppLayout>
 
@@ -208,7 +214,7 @@ function coverUrl(path) {
                     <Link
                         v-if="posts.prev_page_url"
                         :href="posts.prev_page_url"
-                        class="px-4 py-2 rounded-lg border border-[#E5E7EB] text-sm font-medium text-gray-700 hover:border-[#F4620A]/30 hover:text-[#F4620A] transition-all"
+                        class="px-5 py-2.5 min-h-[44px] flex items-center rounded-[10px] border border-[#E5E7EB] text-sm font-medium text-gray-700 hover:border-[#F4620A]/30 hover:text-[#F4620A] transition-all duration-[220ms] cursor-pointer"
                         aria-label="Page précédente"
                     >
                         ← Précédent
@@ -219,7 +225,7 @@ function coverUrl(path) {
                     <Link
                         v-if="posts.next_page_url"
                         :href="posts.next_page_url"
-                        class="px-4 py-2 rounded-lg border border-[#E5E7EB] text-sm font-medium text-gray-700 hover:border-[#F4620A]/30 hover:text-[#F4620A] transition-all"
+                        class="px-5 py-2.5 min-h-[44px] flex items-center rounded-[10px] border border-[#E5E7EB] text-sm font-medium text-gray-700 hover:border-[#F4620A]/30 hover:text-[#F4620A] transition-all duration-[220ms] cursor-pointer"
                         aria-label="Page suivante"
                     >
                         Suivant →

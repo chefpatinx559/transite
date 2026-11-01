@@ -52,6 +52,34 @@ const productSchemaTag = computed(() => {
     return `<script type="application/ld+json">${data}<\/script>`
 })
 
+const breadcrumbSchemaTag = computed(() => {
+    const data = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Accueil',
+                item: 'https://netspring.business/',
+            },
+            {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Boutique',
+                item: 'https://netspring.business/boutique',
+            },
+            {
+                '@type': 'ListItem',
+                position: 3,
+                name: props.product.name,
+                item: `https://netspring.business/boutique/${props.product.slug}`,
+            },
+        ],
+    })
+    return `<script type="application/ld+json">${data}<\/script>`
+})
+
 function addRelatedToCart(product) {
     router.post('/panier/ajouter', { product_id: product.id, quantity: 1 }, { preserveScroll: true })
 }
@@ -72,6 +100,7 @@ function addRelatedToCart(product) {
         <meta name="twitter:image" :content="product.images?.[0]?.url ?? product.images?.[0] ?? ''" />
     </Head>
     <div v-html="productSchemaTag" style="display:none" />
+    <div v-html="breadcrumbSchemaTag" style="display:none" />
     <AppLayout>
 
         <!-- Breadcrumb -->
@@ -285,7 +314,7 @@ function addRelatedToCart(product) {
                     </Link>
                     <div class="px-4 pb-4">
                         <button
-                            class="w-full flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-2 rounded-[9px] transition-all duration-[220ms] cursor-pointer"
+                            class="w-full flex items-center justify-center gap-1.5 bg-[#F4620A] hover:bg-[#d45208] text-white text-xs font-semibold py-2.5 min-h-[44px] rounded-[10px] transition-all duration-[220ms] cursor-pointer"
                             :aria-label="`Ajouter ${item.name} au panier`"
                             @click="addRelatedToCart(item)"
                         >

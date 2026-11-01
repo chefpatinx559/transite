@@ -79,20 +79,20 @@ Route::get('/faq', fn () => Inertia::render('Faq'))->name('faq');
 
 Route::get('/importer', fn () => Inertia::render('Importer'))->name('importer');
 Route::get('/importer/devis', fn () => Inertia::render('Importer', ['openForm' => true]))->name('importer.devis');
-Route::post('/importer/devis', [QuoteController::class, 'store'])->name('quote.store');
+Route::post('/importer/devis', [QuoteController::class, 'store'])->name('quote.store')->middleware('throttle:public-form');
 
 Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:public-form');
 
 // Formations
 Route::get('/formations',                        [\App\Http\Controllers\FormationController::class, 'index'])->name('formations');
 Route::get('/formations/{slug}',                 [\App\Http\Controllers\FormationController::class, 'show'])->name('formation.show');
-Route::post('/formations/{slug}/inscription',    [\App\Http\Controllers\FormationController::class, 'register'])->name('formation.register');
+Route::post('/formations/{slug}/inscription',    [\App\Http\Controllers\FormationController::class, 'register'])->name('formation.register')->middleware('throttle:public-form');
 Route::get('/formation/confirmation/{token}',    [\App\Http\Controllers\FormationController::class, 'confirmation'])->name('formation.confirmation');
 Route::get('/formation/paiement/succes',         [\App\Http\Controllers\FormationController::class, 'paymentSuccess'])->name('formation.payment.success');
 Route::get('/formation/paiement/echec',          [\App\Http\Controllers\FormationController::class, 'paymentError'])->name('formation.payment.error');
 
-Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe')->middleware('throttle:newsletter');
 
 // SEO
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
@@ -134,9 +134,9 @@ Route::post('/webhooks/geniuspay', [\App\Http\Controllers\GeniusPayWebhookContro
 // ──────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/connexion', [LoginController::class, 'index'])->name('login');
-    Route::post('/connexion', [LoginController::class, 'store'])->name('login.store');
+    Route::post('/connexion', [LoginController::class, 'store'])->name('login.store')->middleware('throttle:login');
     Route::get('/inscription', [RegisterController::class, 'index'])->name('register');
-    Route::post('/inscription', [RegisterController::class, 'store'])->name('register.store');
+    Route::post('/inscription', [RegisterController::class, 'store'])->name('register.store')->middleware('throttle:login');
 });
 Route::post('/deconnexion', [LoginController::class, 'destroy'])->name('logout')->middleware('auth');
 

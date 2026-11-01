@@ -65,14 +65,20 @@ const steps = [
 </script>
 
 <template>
-    <Head title="Nos Services — Importation Chine-CI">
-        <meta name="description" content="Découvrez les services NETSPRING : recherche de fournisseurs, achat et négociation, contrôle qualité, transport maritime et aérien, dédouanement en Côte d'Ivoire." />
+    <Head title="Services Import Chine-CI — NETSPRING">
+        <meta name="description" content="Services NETSPRING : recherche fournisseurs, négociation, contrôle qualité, transport maritime/aérien, dédouanement CI. Import clé en main." />
         <link rel="canonical" href="https://netspring.business/services" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="Nos Services — Importation Chine-CI | NETSPRING" />
         <meta property="og:description" content="Sourcing, négociation, contrôle qualité, transport et dédouanement. NETSPRING gère votre importation de A à Z." />
         <meta property="og:url" content="https://netspring.business/services" />
+        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Nos Services — Importation Chine-CI | NETSPRING" />
         <meta name="twitter:description" content="Sourcing, négociation, contrôle qualité, transport et dédouanement. NETSPRING gère votre importation de A à Z." />
+        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
     </Head>
     <AppLayout>
 
