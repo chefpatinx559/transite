@@ -33,6 +33,13 @@ function share() {
 
 import { computed } from 'vue'
 
+const cleanContent = computed(() => {
+    if (!props.post.content) return ''
+    return props.post.content
+        .replace(/&nbsp;/g, ' ')
+        .replace(/ /g, ' ')
+})
+
 const articleSchemaTag = computed(() => {
     const data = JSON.stringify({
         '@context': 'https://schema.org',
@@ -166,7 +173,7 @@ const articleSchemaTag = computed(() => {
                                prose-li:marker:text-[#F4620A]
                                prose-img:rounded-[12px] prose-img:shadow-md
                                prose-blockquote:border-[#F4620A] prose-blockquote:text-gray-500"
-                        v-html="post.content"
+                        v-html="cleanContent"
                         aria-label="Contenu de l'article"
                     ></div>
 

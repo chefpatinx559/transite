@@ -232,6 +232,61 @@ a, button, [role="button"] {
     .card-lift:hover { transform: none; }
 }
 
+/* ══════════════════════════════════════════════
+   QUILL CONTENT — rendu côté public (v-html)
+══════════════════════════════════════════════ */
+
+/* Alignement */
+.prose .ql-align-center { text-align: center; }
+.prose .ql-align-right  { text-align: right;  }
+.prose .ql-align-justify { text-align: justify; }
+
+/* Indentation (Quill génère ql-indent-1 à ql-indent-8) */
+.prose .ql-indent-1 { padding-left: 3em;  }
+.prose .ql-indent-2 { padding-left: 6em;  }
+.prose .ql-indent-3 { padding-left: 9em;  }
+.prose .ql-indent-4 { padding-left: 12em; }
+.prose .ql-indent-5 { padding-left: 15em; }
+.prose .ql-indent-6 { padding-left: 18em; }
+.prose .ql-indent-7 { padding-left: 21em; }
+.prose .ql-indent-8 { padding-left: 24em; }
+
+/* Listes indentées — Quill met ql-indent-N sur les <li> */
+.prose li.ql-indent-1 { margin-left: 3em;  padding-left: 0; }
+.prose li.ql-indent-2 { margin-left: 6em;  padding-left: 0; }
+.prose li.ql-indent-3 { margin-left: 9em;  padding-left: 0; }
+.prose li.ql-indent-4 { margin-left: 12em; padding-left: 0; }
+
+/* Code block */
+.prose .ql-code-block-container,
+.prose pre.ql-syntax {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 12px;
+    padding: 1.25em 1.5em;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.9em;
+    line-height: 1.7;
+}
+
+/* Vidéo embed responsive */
+.prose .ql-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+/* Images inline Quill */
+.prose img {
+    border-radius: 12px;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+
 /* ── Custom dot cursor — hide native on desktop ── */
 @media (pointer: fine) {
     html, body { cursor: none; }
