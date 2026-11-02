@@ -259,11 +259,7 @@ class SeoService
             return self::DEFAULT_IMAGE;
         }
 
-        if (str_starts_with($url, 'http')) {
-            return $url;
-        }
-
-        return self::BASE . '/storage/' . ltrim($url, '/');
+        return self::toAbsoluteUrl($url);
     }
 
     private static function resolveCoverImage(?string $path): string
@@ -272,10 +268,21 @@ class SeoService
             return self::DEFAULT_IMAGE;
         }
 
+        return self::toAbsoluteUrl($path);
+    }
+
+    private static function toAbsoluteUrl(string $path): string
+    {
         if (str_starts_with($path, 'http')) {
             return $path;
         }
 
-        return self::BASE . '/storage/' . ltrim($path, '/');
+        $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'storage/')) {
+            return self::BASE . '/' . $path;
+        }
+
+        return self::BASE . '/storage/' . $path;
     }
 }
