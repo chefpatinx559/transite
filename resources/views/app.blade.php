@@ -4,18 +4,35 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <meta name="robots" content="index, follow">
+        @php
+            $seo = \App\Services\SeoService::forPage($page);
+        @endphp
 
-        {{-- OG / Twitter — valeurs globales (title, description, url viennent de <Head> par page) --}}
+        @if($seo['noindex'])
+        <meta name="robots" content="noindex, nofollow">
+        @else
+        <meta name="robots" content="index, follow">
+        <meta name="description" content="{{ $seo['description'] }}">
+        <link rel="canonical" href="{{ $seo['canonical'] }}">
+        @endif
+
+        {{-- OG / Twitter — dynamiques par page --}}
         <meta property="og:site_name" content="NETSPRING">
         <meta property="og:locale" content="fr_CI">
-        <meta property="og:type" content="website">
-        <meta property="og:image" content="{{ asset('og-image.png') }}">
+        @unless($seo['noindex'])
+        <meta property="og:type" content="{{ $seo['og_type'] }}">
+        <meta property="og:title" content="{{ $seo['og_title'] }}">
+        <meta property="og:description" content="{{ $seo['og_description'] }}">
+        <meta property="og:url" content="{{ $seo['og_url'] }}">
+        <meta property="og:image" content="{{ $seo['og_image'] }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="NETSPRING — Commerce Chine vers Côte d'Ivoire">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:image" content="{{ asset('og-image.png') }}">
+        <meta name="twitter:title" content="{{ $seo['og_title'] }}">
+        <meta name="twitter:description" content="{{ $seo['og_description'] }}">
+        <meta name="twitter:image" content="{{ $seo['og_image'] }}">
+        @endunless
 
         {{-- Favicons --}}
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
@@ -24,7 +41,7 @@
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
         <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
-        <title inertia>NETSPRING</title>
+        <title inertia>{{ $seo['title'] }}</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
