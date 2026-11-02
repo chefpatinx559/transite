@@ -33,13 +33,13 @@ function coverUrl(path) {
         <meta property="og:title" content="Formations Import Chine — NETSPRING Côte d'Ivoire" />
         <meta property="og:description" content="Apprenez à importer depuis la Chine : e-commerce, sourcing, négociation, logistique. Formations en ligne et en présentiel." />
         <meta property="og:url" content="https://netspring.business/formations" />
-        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Formations Import Chine — NETSPRING" />
         <meta name="twitter:description" content="Apprenez à importer depuis la Chine : e-commerce, sourcing, négociation, logistique." />
-        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
     <AppLayout>
 

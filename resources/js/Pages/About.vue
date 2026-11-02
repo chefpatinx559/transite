@@ -28,13 +28,13 @@ const teamStats = [
         <meta property="og:title" content="À propos — NETSPRING | Commerce Chine – Côte d'Ivoire" />
         <meta property="og:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine. Découvrez notre histoire." />
         <meta property="og:url" content="https://netspring.business/a-propos" />
-        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="À propos — NETSPRING" />
         <meta name="twitter:description" content="Depuis 2022, NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine." />
-        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
     <AppLayout>
 

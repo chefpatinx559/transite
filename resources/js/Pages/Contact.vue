@@ -28,13 +28,13 @@ const contacts = [
         <meta property="og:title" content="Contactez-nous — NETSPRING" />
         <meta property="og:description" content="Besoin d'aide pour importer depuis la Chine ? Contactez NETSPRING : WhatsApp, email ou formulaire. Réponse sous 24h." />
         <meta property="og:url" content="https://netspring.business/contact" />
-        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Contactez-nous — NETSPRING" />
         <meta name="twitter:description" content="Besoin d'aide pour importer depuis la Chine ? Contactez NETSPRING. Réponse sous 24h." />
-        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
     <AppLayout>
 

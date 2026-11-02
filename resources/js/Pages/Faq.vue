@@ -66,13 +66,13 @@ const faqSchemaTag = computed(() => {
         <meta property="og:title" content="FAQ — Questions fréquentes | NETSPRING" />
         <meta property="og:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents douaniers, paiements sécurisés." />
         <meta property="og:url" content="https://netspring.business/faq" />
-        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="FAQ — Questions fréquentes | NETSPRING" />
         <meta name="twitter:description" content="Réponses à vos questions sur l'importation Chine–CI : délais, coûts, documents, paiements." />
-        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
     <div v-html="faqSchemaTag" style="display:none" />
     <AppLayout>

@@ -72,13 +72,13 @@ const steps = [
         <meta property="og:title" content="Nos Services — Importation Chine-CI | NETSPRING" />
         <meta property="og:description" content="Sourcing, négociation, contrôle qualité, transport et dédouanement. NETSPRING gère votre importation de A à Z." />
         <meta property="og:url" content="https://netspring.business/services" />
-        <meta property="og:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Nos Services — Importation Chine-CI | NETSPRING" />
         <meta name="twitter:description" content="Sourcing, négociation, contrôle qualité, transport et dédouanement. NETSPRING gère votre importation de A à Z." />
-        <meta name="twitter:image" content="https://netspring.business/images/og-default.jpg" />
+        <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
     <AppLayout>
 
