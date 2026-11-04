@@ -17,6 +17,10 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 5
+    ignore:
+      - dependency-name: "phpunit/phpunit"
+        versions:
+          - ">=13.0.0"
     groups:
       composer:
         patterns:
