@@ -15,17 +15,17 @@
         "vite": "^8.0.0"
     },
     "optionalDependencies": {
-        "@laravel/multiplex": "^0.4.1"
+        "@laravel/multiplex": "^0.4.5"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^3.7.0",
-        "@vitejs/plugin-vue": "^6.0.8",
-        "@vue/server-renderer": "^3.5.43",
-        "axios": "^1.20.0",
+        "@inertiajs/vue3": "^3.10.0",
+        "@vitejs/plugin-vue": "^6.0.10",
+        "@vue/server-renderer": "^3.5.44",
+        "axios": "^1.21.0",
         "lucide-vue-next": "^1.0.0",
-        "three": "^0.186.0",
+        "three": "^0.187.0",
         "topojson-client": "^3.1.0",
-        "vue": "^3.5.42",
+        "vue": "^3.5.44",
         "world-atlas": "^2.0.2"
     }
 }
