@@ -141,8 +141,11 @@ onMounted(() => {
                                 <img
                                     :src="t.avatar"
                                     :alt="`Photo de ${t.name}`"
+                                    width="40"
+                                    height="40"
                                     class="w-full h-full object-cover"
                                     loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
                             <div

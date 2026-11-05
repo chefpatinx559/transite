@@ -110,6 +110,9 @@ jobs:
             $PHP artisan db:seed --class=AdminSeeder --force
             $PHP artisan db:seed --class=CategorySeeder --force
 
+            # Convertir les images existantes (PNG/JPEG → WebP) en base + disque
+            $PHP artisan images:optimize || true
+
             # Cache
             $PHP artisan config:cache
             $PHP artisan route:cache

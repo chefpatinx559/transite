@@ -1,11 +1,22 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, defineAsyncComponent, onMounted } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { useReveal } from '@/composables/useReveal'
-import SocialProof from '@/Components/SocialProof.vue'
-import BlogPreview from '@/Components/BlogPreview.vue'
-import GlobeAnimation from '@/Components/GlobeAnimation.vue'
+
+const GlobeAnimation = defineAsyncComponent(() => import('@/Components/GlobeAnimation.vue'))
+const SocialProof    = defineAsyncComponent(() => import('@/Components/SocialProof.vue'))
+const BlogPreview    = defineAsyncComponent(() => import('@/Components/BlogPreview.vue'))
+
+const showGlobe = ref(false)
+onMounted(() => {
+    const start = () => { showGlobe.value = true }
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(start, { timeout: 600 })
+    } else {
+        setTimeout(start, 200)
+    }
+})
 
 useReveal()
 
@@ -98,14 +109,14 @@ const organizationSchemaTag = computed(() => {
         <link rel="canonical" href="https://netspring.business/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
-        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
+        <meta property="og:description" content="Importation, sourcing, formations et boutique. Plus de 20+ entrepreneurs accompagnés depuis 2022." />
         <meta property="og:url" content="https://netspring.business/" />
         <meta property="og:image" content="https://netspring.business/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="NETSPRING — Votre pont commercial Chine – Côte d'Ivoire" />
-        <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022." />
+        <meta name="twitter:description" content="Importation, sourcing, formations et boutique. Plus de 20+ entrepreneurs accompagnés depuis 2022." />
         <meta name="twitter:image" content="https://netspring.business/og-image.png" />
     </Head>
 
@@ -178,7 +189,7 @@ const organizationSchemaTag = computed(() => {
                     role="img"
                     aria-label="Globe animé — route commerciale Chine vers Côte d'Ivoire — NETSPRING"
                 >
-                    <GlobeAnimation class="absolute inset-0 w-full h-full" />
+                    <GlobeAnimation v-if="showGlobe" class="absolute inset-0 w-full h-full" />
 
                     <div class="absolute bottom-5 left-5 bg-white rounded-[12px] px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
                         <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Clients satisfaits</p>

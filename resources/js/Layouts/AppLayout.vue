@@ -1,17 +1,20 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import axios from 'axios'
 import {
     Globe, Menu, X, ArrowRight,
     Mail, MapPin, Phone, FileText, ShoppingCart, CheckCircle2,
 } from 'lucide-vue-next'
 import Logo from '@/Components/Logo.vue'
-import DotCursor from '@/Components/DotCursor.vue'
+
+const DotCursor = defineAsyncComponent(() => import('@/Components/DotCursor.vue'))
+const showCursor = ref(false)
 
 const page       = usePage()
 const isScrolled = ref(false)
 const mobileOpen = ref(false)
+const scrollSentinel = ref(null)
+let scrollObs = null
 
 // Panier — données partagées depuis HandleInertiaRequests
 const cartCount = computed(() => page.props.cartCount ?? 0)
@@ -27,9 +30,32 @@ watch(() => page.props.flash?.success, (msg) => {
     toastTimer.value = setTimeout(() => { toast.value = null }, 3500)
 }, { immediate: true })
 
-function onScroll() { isScrolled.value = window.scrollY > 60 }
-onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
-onUnmounted(() => { window.removeEventListener('scroll', onScroll); clearTimeout(toastTimer.value) })
+onMounted(() => {
+    // Sticky header trigger via IntersectionObserver (zero scroll listener / zero scrollY forced reflow)
+    if (scrollSentinel.value && 'IntersectionObserver' in window) {
+        scrollObs = new IntersectionObserver(
+            (entries) => {
+                isScrolled.value = !entries[0].isIntersecting
+            },
+            { threshold: 0 }
+        )
+        scrollObs.observe(scrollSentinel.value)
+    }
+
+    // Load custom cursor only on fine-pointer desktop after idle
+    if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const enableCursor = () => { showCursor.value = true }
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(enableCursor, { timeout: 1500 })
+        } else {
+            setTimeout(enableCursor, 600)
+        }
+    }
+})
+onUnmounted(() => {
+    scrollObs?.disconnect()
+    clearTimeout(toastTimer.value)
+})
 
 const nav = [
     { label: 'Accueil',      href: '/' },
@@ -54,20 +80,40 @@ async function subscribeNewsletter() {
     if (!newsletterEmail.value) return
     newsletterStatus.value = 'loading'
     try {
-        const res = await axios.post('/newsletter/subscribe', { email: newsletterEmail.value })
+        const xsrf = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1]
+        const res = await fetch('/newsletter/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...(xsrf ? { 'X-XSRF-TOKEN': decodeURIComponent(xsrf) } : {}),
+            },
+            body: JSON.stringify({ email: newsletterEmail.value }),
+        })
+        const data = await res.json().catch(() => ({}))
+        if (!res.ok) {
+            throw new Error(data.message ?? 'Une erreur est survenue.')
+        }
         newsletterStatus.value = 'success'
-        newsletterMessage.value = res.data.message
+        newsletterMessage.value = data.message
         newsletterEmail.value = ''
     } catch (e) {
         newsletterStatus.value = 'error'
-        newsletterMessage.value = e.response?.data?.message ?? 'Une erreur est survenue.'
+        newsletterMessage.value = e.message || 'Une erreur est survenue.'
     }
 }
 </script>
 
 <template>
-    <!-- Custom cursor (desktop only) -->
-    <DotCursor />
+    <!-- Custom cursor (desktop only, lazy-loaded after idle) -->
+    <DotCursor v-if="showCursor" />
+
+    <!-- Scroll sentinel (60px height at top, observed via IntersectionObserver) -->
+    <div ref="scrollSentinel" aria-hidden="true" class="pointer-events-none absolute top-0 left-0 right-0 h-[60px] -z-10" />
 
     <!-- Skip link -->
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>

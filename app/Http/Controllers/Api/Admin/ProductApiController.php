@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -87,7 +88,7 @@ class ProductApiController extends Controller
         if ($request->hasFile('photos')) {
             $images = [];
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('products', 'public');
+                $path = ImageOptimizer::storeAsWebp($file, 'products');
                 $images[] = ['url' => '/storage/' . $path, 'alt' => $validated['name']];
             }
             $validated['images'] = $images;
@@ -144,7 +145,7 @@ class ProductApiController extends Controller
                 }
             }
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('products', 'public');
+                $path = ImageOptimizer::storeAsWebp($file, 'products');
                 $newImages[] = ['url' => '/storage/' . $path, 'alt' => $validated['name']];
             }
         }

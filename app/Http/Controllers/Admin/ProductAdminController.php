@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -64,7 +65,7 @@ class ProductAdminController extends Controller
 
         // Upload photo principale
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('products', 'public');
+            $path = ImageOptimizer::storeAsWebp($request->file('photo'), 'products');
             $validated['images'] = [['url' => '/storage/' . $path, 'alt' => $validated['name']]];
         }
 
@@ -111,7 +112,7 @@ class ProductAdminController extends Controller
 
         // Nouvelle photo uploadée
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('products', 'public');
+            $path = ImageOptimizer::storeAsWebp($request->file('photo'), 'products');
             $validated['images'] = [['url' => '/storage/' . $path, 'alt' => $validated['name']]];
         }
 

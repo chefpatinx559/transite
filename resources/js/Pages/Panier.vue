@@ -131,8 +131,11 @@ function removeItem(item) {
                                         v-if="item.image"
                                         :src="item.image"
                                         :alt="item.name"
+                                        width="64"
+                                        height="64"
                                         class="w-full h-full object-cover"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                     <Package v-else class="w-7 h-7 text-gray-300" aria-hidden="true" />
                                 </div>

@@ -78,8 +78,11 @@ function formatDate(dateStr) {
                                 v-if="coverUrl(post.cover_image)"
                                 :src="coverUrl(post.cover_image)"
                                 :alt="post.title"
+                                width="800"
+                                height="450"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 loading="lazy"
+                                decoding="async"
                             />
                             <!--
                                 TODO: Remplacer ce gradient par une vraie image de couverture

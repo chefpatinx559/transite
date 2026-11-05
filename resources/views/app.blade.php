@@ -45,8 +45,11 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"></noscript>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
 
         {{-- Schema.org LocalBusiness --}}
@@ -88,16 +91,30 @@
     <body class="font-sans antialiased">
         @inertia
 
-        <!--Start of Tawk.to Script-->
+        <!--Start of Tawk.to Script (deferred until user interaction / idle to prevent main-thread blocking)-->
         <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
         (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/6a9be43d729e44344cceb056/1k1of74uc';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
+            var loaded = false;
+            function loadTawk() {
+                if (loaded) return;
+                loaded = true;
+                ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(function(evt) {
+                    window.removeEventListener(evt, loadTawk, { passive: true });
+                });
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/6a9be43d729e44344cceb056/1k1of74uc';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            }
+            ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(function(evt) {
+                window.addEventListener(evt, loadTawk, { once: true, passive: true });
+            });
+            window.addEventListener('load', function() {
+                setTimeout(loadTawk, 5000);
+            }, { once: true });
         })();
         </script>
         <!--End of Tawk.to Script-->

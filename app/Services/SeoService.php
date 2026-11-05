@@ -96,7 +96,7 @@ class SeoService
             'NETSPRING accompagne les entrepreneurs ivoiriens dans l\'importation depuis la Chine : sourcing, négociation, transport, dédouanement. 500+ clients.',
             self::BASE . '/',
             'NETSPRING — Votre pont commercial Chine – Côte d\'Ivoire',
-            'Importation, sourcing, formations et boutique. Plus de 500 entrepreneurs accompagnés depuis 2022.',
+            'Importation, sourcing, formations et boutique. Plus de 20+ entrepreneurs accompagnés depuis 2022.',
         );
     }
 
@@ -249,13 +249,13 @@ class SeoService
 
     private static function resolveImage(mixed $image): string
     {
-        if (! $image) {
+        if (!$image) {
             return self::DEFAULT_IMAGE;
         }
 
         $url = is_array($image) ? ($image['url'] ?? null) : $image;
 
-        if (! $url) {
+        if (!$url) {
             return self::DEFAULT_IMAGE;
         }
 
@@ -264,7 +264,7 @@ class SeoService
 
     private static function resolveCoverImage(?string $path): string
     {
-        if (! $path) {
+        if (!$path) {
             return self::DEFAULT_IMAGE;
         }
 

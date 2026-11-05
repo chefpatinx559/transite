@@ -94,6 +94,10 @@ function paymentBadge(status) {
                                     v-if="item.image"
                                     :src="item.image.startsWith('http') ? item.image : '/storage/' + item.image"
                                     :alt="item.name"
+                                    width="40"
+                                    height="40"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-full object-cover"
                                 />
                                 <Package v-else class="w-4.5 h-4.5 text-gray-300" aria-hidden="true" />

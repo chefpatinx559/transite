@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -51,7 +53,7 @@ class PostApiController extends Controller
         ]);
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('posts', 'public');
+            $validated['cover_image'] = ImageOptimizer::storeAsWebp($request->file('cover_image'), 'posts');
         } else {
             unset($validated['cover_image']);
         }
@@ -61,6 +63,7 @@ class PostApiController extends Controller
         $validated['status']  = $validated['status'] ?? 'draft';
 
         $post = Post::create($validated);
+        Cache::forget('home.latest_posts');
 
         return response()->json($post->load([
             'author:id,first_name,last_name',
@@ -87,7 +90,7 @@ class PostApiController extends Controller
             if ($post->cover_image) {
                 Storage::disk('public')->delete($post->cover_image);
             }
-            $validated['cover_image'] = $request->file('cover_image')->store('posts', 'public');
+            $validated['cover_image'] = ImageOptimizer::storeAsWebp($request->file('cover_image'), 'posts');
         } elseif ($request->input('remove_cover') === '1') {
             if ($post->cover_image) {
                 Storage::disk('public')->delete($post->cover_image);
@@ -104,6 +107,7 @@ class PostApiController extends Controller
         }
 
         $post->update($validated);
+        Cache::forget('home.latest_posts');
 
         return response()->json($post->load([
             'author:id,first_name,last_name',
@@ -117,6 +121,7 @@ class PostApiController extends Controller
             Storage::disk('public')->delete($post->cover_image);
         }
         $post->delete();
+        Cache::forget('home.latest_posts');
 
         return response()->json(null, 204);
     }

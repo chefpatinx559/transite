@@ -37,11 +37,13 @@ Route::get('/admin/{any?}', function () {
 // PAGES VITRINE — M1
 // ──────────────────────────────────────────────
 Route::get('/', function () {
-    $posts = \App\Models\Post::published()
-        ->with('category:id,name,slug,color')
-        ->orderByDesc('published_at')
-        ->limit(4)
-        ->get(['id', 'title', 'slug', 'cover_image', 'reading_time', 'published_at', 'category_id']);
+    $posts = \Illuminate\Support\Facades\Cache::remember('home.latest_posts', 300, function () {
+        return \App\Models\Post::published()
+            ->with('category:id,name,slug,color')
+            ->orderByDesc('published_at')
+            ->limit(4)
+            ->get(['id', 'title', 'slug', 'cover_image', 'reading_time', 'published_at', 'category_id']);
+    });
 
     // TODO: Remplacer par de vrais témoignages clients (photos, noms réels)
     $testimonials = [

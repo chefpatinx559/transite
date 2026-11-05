@@ -16,7 +16,7 @@ function formatDate(d) {
     return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-const DEFAULT_COVER = 'https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg'
+import DEFAULT_COVER from '../../../images/default-cover.webp'
 
 function coverUrl(path) {
     if (!path) return DEFAULT_COVER
@@ -85,8 +85,11 @@ function coverUrl(path) {
                             <img
                                 :src="coverUrl(formation.cover_image)"
                                 :alt="formation.title"
+                                width="800"
+                                height="450"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 loading="lazy"
+                                decoding="async"
                             />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                             <!-- Badges -->

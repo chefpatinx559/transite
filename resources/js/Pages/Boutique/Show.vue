@@ -128,8 +128,12 @@ function addRelatedToCart(product) {
                                 :key="activeImage.url ?? activeImage"
                                 :src="activeImage.url ?? activeImage"
                                 :alt="activeImage.alt ?? product.name"
+                                width="600"
+                                height="600"
                                 class="w-full h-full object-cover"
-                                loading="lazy"
+                                fetchpriority="high"
+                                loading="eager"
+                                decoding="async"
                             />
                         </Transition>
                         <Package v-if="!activeImage" class="absolute inset-0 m-auto w-20 h-20 text-gray-300" aria-hidden="true" />
@@ -147,7 +151,7 @@ function addRelatedToCart(product) {
                             :aria-label="`Image produit ${idx + 1}`"
                             @click="activeImage = img"
                         >
-                            <img :src="img.url ?? img" :alt="img.alt ?? `${product.name} vue ${idx + 1}`" class="w-full h-full object-cover" loading="lazy" />
+                            <img :src="img.url ?? img" :alt="img.alt ?? `${product.name} vue ${idx + 1}`" width="80" height="80" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                         </button>
                     </div>
                 </div>
@@ -300,8 +304,11 @@ function addRelatedToCart(product) {
                                 v-if="item.images && item.images.length"
                                 :src="item.images[0]?.url ?? item.images[0]"
                                 :alt="item.name"
+                                width="400"
+                                height="400"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[300ms]"
                                 loading="lazy"
+                                decoding="async"
                             />
                             <Package v-else class="w-10 h-10 text-gray-300" aria-hidden="true" />
                         </div>

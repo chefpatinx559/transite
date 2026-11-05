@@ -204,8 +204,11 @@ onUnmounted(() => { observer?.disconnect() })
                             v-if="product.images && product.images[0]"
                             :src="product.images[0].url ?? product.images[0]"
                             :alt="product.images[0].alt ?? product.name"
+                            width="400"
+                            height="400"
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[300ms]"
                             loading="lazy"
+                            decoding="async"
                         />
                         <Package v-else class="w-12 h-12 text-gray-300" aria-hidden="true" />
 

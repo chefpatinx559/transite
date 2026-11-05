@@ -32,7 +32,7 @@ function formatDate(d) {
     return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-const DEFAULT_COVER = 'https://static.vecteezy.com/system/resources/previews/027/484/654/large_2x/global-business-logistic-and-transportation-import-export-goods-container-cargo-freight-ship-at-international-port-cargo-plane-flying-above-truck-shipping-container-logistic-industry-generative-ai-photo.jpg'
+import DEFAULT_COVER from '../../../images/default-cover.webp'
 
 function coverUrl(path) {
     if (!path) return DEFAULT_COVER
@@ -149,7 +149,16 @@ const courseSchemaTag = computed(() => {
                 <div>
                     <!-- Image -->
                     <div class="aspect-[16/9] rounded-[16px] overflow-hidden mb-8">
-                        <img :src="coverUrl(formation.cover_image)" :alt="formation.title" class="w-full h-full object-cover" />
+                        <img
+                            :src="coverUrl(formation.cover_image)"
+                            :alt="formation.title"
+                            width="800"
+                            height="450"
+                            fetchpriority="high"
+                            loading="eager"
+                            decoding="async"
+                            class="w-full h-full object-cover"
+                        />
                     </div>
 
                     <!-- Contenu HTML -->

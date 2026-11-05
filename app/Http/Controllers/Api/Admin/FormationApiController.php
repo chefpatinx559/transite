@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Formation;
 use App\Models\FormationRegistration;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -57,7 +58,7 @@ class FormationApiController extends Controller
         $validated['price']       = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('formations', 'public');
+            $validated['cover_image'] = ImageOptimizer::storeAsWebp($request->file('cover_image'), 'formations');
         } else {
             unset($validated['cover_image']);
         }
@@ -94,7 +95,7 @@ class FormationApiController extends Controller
 
         if ($request->hasFile('cover_image')) {
             if ($formation->cover_image) Storage::disk('public')->delete($formation->cover_image);
-            $validated['cover_image'] = $request->file('cover_image')->store('formations', 'public');
+            $validated['cover_image'] = ImageOptimizer::storeAsWebp($request->file('cover_image'), 'formations');
         } elseif ($request->input('remove_cover') === '1') {
             if ($formation->cover_image) Storage::disk('public')->delete($formation->cover_image);
             $validated['cover_image'] = null;

@@ -107,7 +107,7 @@ function submit() {
                                 class="flex items-center gap-3"
                             >
                                 <div class="w-10 h-10 bg-gray-100 rounded-[8px] flex items-center justify-center flex-shrink-0 overflow-hidden">
-                                    <img v-if="item.image" :src="item.image" :alt="item.name" class="w-full h-full object-cover" />
+                                    <img v-if="item.image" :src="item.image" :alt="item.name" width="40" height="40" loading="lazy" decoding="async" class="w-full h-full object-cover" />
                                     <Package v-else class="w-4.5 h-4.5 text-gray-300" aria-hidden="true" />
                                 </div>
                                 <div class="flex-1 min-w-0">

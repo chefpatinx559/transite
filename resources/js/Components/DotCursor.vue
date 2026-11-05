@@ -12,8 +12,10 @@ const props = defineProps({
 const canvas = ref(null)
 let ctx = null
 let raf = null
+let resizeRaf = null
 let mouse = { x: -100, y: -100 }
 let head = { x: -100, y: -100, vx: 0, vy: 0 }
+let currentSize = props.size
 let trail = []
 let hovering = false
 let visible = false
@@ -29,13 +31,21 @@ function hexToRgb(hex) {
     return { r, g, b }
 }
 
+const headRgb  = hexToRgb(props.headColor)
+const trailRgb = hexToRgb(props.trailColor)
+
+// Pure DOM tag/selector check — zero window.getComputedStyle() to avoid forced style recalc
 function isInteractive(el) {
-    if (!el) return false
+    if (!el || typeof el.closest !== 'function') return false
     const tag = el.tagName
-    if (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true
-    if (el.closest('a, button, [role="button"], [data-cursor-hover]')) return true
-    const style = window.getComputedStyle(el)
-    return style.cursor === 'pointer'
+    if (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'LABEL' || tag === 'SUMMARY') return true
+    return Boolean(el.closest('a, button, [role="button"], [data-cursor-hover], .cursor-pointer'))
+}
+
+function scheduleFrame() {
+    if (raf === null && ctx && !isTouchDevice) {
+        raf = requestAnimationFrame(animate)
+    }
 }
 
 function onMouseMove(e) {
@@ -43,33 +53,51 @@ function onMouseMove(e) {
     mouse.y = e.clientY
     if (!visible) visible = true
     hovering = isInteractive(e.target)
+    scheduleFrame()
 }
 
 function onMouseLeave() {
     visible = false
+    if (ctx && canvas.value) {
+        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+    }
 }
 
 function onMouseEnter() {
     visible = true
+    scheduleFrame()
 }
 
 function onTouchStart() {
     isTouchDevice = true
+    if (raf) {
+        cancelAnimationFrame(raf)
+        raf = null
+    }
 }
 
 function resize() {
-    if (!canvas.value) return
-    canvas.value.width = window.innerWidth
-    canvas.value.height = window.innerHeight
+    if (resizeRaf) return
+    resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null
+        if (!canvas.value) return
+        const w = window.innerWidth
+        const h = window.innerHeight
+        canvas.value.width = w
+        canvas.value.height = h
+    })
 }
 
 function animate() {
-    if (!ctx || isTouchDevice) return
+    raf = null
+    if (!ctx || isTouchDevice || !canvas.value) return
 
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
-    const ax = (mouse.x - head.x) * SPRING
-    const ay = (mouse.y - head.y) * SPRING
+    const dx = mouse.x - head.x
+    const dy = mouse.y - head.y
+    const ax = dx * SPRING
+    const ay = dy * SPRING
     head.vx = (head.vx + ax) * DAMPING
     head.vy = (head.vy + ay) * DAMPING
     head.x += head.vx
@@ -78,8 +106,10 @@ function animate() {
     trail.unshift({ x: head.x, y: head.y })
     if (trail.length > props.trailLength) trail.length = props.trailLength
 
+    const targetSize = hovering ? props.size * 1.8 : props.size
+    currentSize = currentSize + (targetSize - currentSize) * 0.15
+
     if (visible && trail.length > 1) {
-        const rgb = hexToRgb(props.trailColor)
         for (let i = trail.length - 1; i >= 1; i--) {
             const t = 1 - i / trail.length
             const thickness = props.trailThickness * t
@@ -87,7 +117,7 @@ function animate() {
             ctx.beginPath()
             ctx.moveTo(trail[i].x, trail[i].y)
             ctx.lineTo(trail[i - 1].x, trail[i - 1].y)
-            ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`
+            ctx.strokeStyle = `rgba(${trailRgb.r},${trailRgb.g},${trailRgb.b},${alpha})`
             ctx.lineWidth = thickness
             ctx.lineCap = 'round'
             ctx.stroke()
@@ -95,17 +125,10 @@ function animate() {
     }
 
     if (visible) {
-        const targetSize = hovering ? props.size * 1.8 : props.size
-        const currentSize = parseFloat(canvas.value.dataset.currentSize || props.size)
-        const newSize = currentSize + (targetSize - currentSize) * 0.15
-        canvas.value.dataset.currentSize = newSize
-
-        const rgb = hexToRgb(props.headColor)
-
         if (hovering) {
             ctx.beginPath()
-            ctx.arc(head.x, head.y, newSize / 2, 0, Math.PI * 2)
-            ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.6)`
+            ctx.arc(head.x, head.y, currentSize / 2, 0, Math.PI * 2)
+            ctx.strokeStyle = `rgba(${headRgb.r},${headRgb.g},${headRgb.b},0.6)`
             ctx.lineWidth = 2
             ctx.stroke()
             ctx.closePath()
@@ -117,26 +140,35 @@ function animate() {
             ctx.closePath()
         } else {
             ctx.beginPath()
-            ctx.arc(head.x, head.y, newSize / 2, 0, Math.PI * 2)
-            ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.85)`
+            ctx.arc(head.x, head.y, currentSize / 2, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(${headRgb.r},${headRgb.g},${headRgb.b},0.85)`
             ctx.fill()
             ctx.closePath()
 
             ctx.beginPath()
-            ctx.arc(head.x, head.y, newSize / 2 + 6, 0, Math.PI * 2)
-            ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.15)`
+            ctx.arc(head.x, head.y, currentSize / 2 + 6, 0, Math.PI * 2)
+            ctx.strokeStyle = `rgba(${headRgb.r},${headRgb.g},${headRgb.b},0.15)`
             ctx.lineWidth = 1
             ctx.stroke()
             ctx.closePath()
         }
     }
 
-    raf = requestAnimationFrame(animate)
+    // Only keep rAF alive while the cursor is still moving or resizing
+    const moving = Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15 ||
+                   Math.abs(head.vx) > 0.05 || Math.abs(head.vy) > 0.05 ||
+                   Math.abs(targetSize - currentSize) > 0.2
+    if (visible && moving) {
+        raf = requestAnimationFrame(animate)
+    }
 }
 
 onMounted(() => {
     if (typeof window === 'undefined') return
-    if ('ontouchstart' in window && navigator.maxTouchPoints > 0 && !window.matchMedia('(pointer: fine)').matches) {
+    if (
+        ('ontouchstart' in window && navigator.maxTouchPoints > 0 && !window.matchMedia('(pointer: fine)').matches) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
         isTouchDevice = true
         return
     }
@@ -144,18 +176,21 @@ onMounted(() => {
     ctx = canvas.value?.getContext('2d')
     if (!ctx) return
 
-    resize()
+    const w = window.innerWidth
+    const h = window.innerHeight
+    canvas.value.width = w
+    canvas.value.height = h
+
     window.addEventListener('mousemove', onMouseMove, { passive: true })
     window.addEventListener('resize', resize, { passive: true })
     document.addEventListener('mouseleave', onMouseLeave)
     document.addEventListener('mouseenter', onMouseEnter)
     window.addEventListener('touchstart', onTouchStart, { once: true, passive: true })
-
-    raf = requestAnimationFrame(animate)
 })
 
 onUnmounted(() => {
     if (raf) cancelAnimationFrame(raf)
+    if (resizeRaf) cancelAnimationFrame(resizeRaf)
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('resize', resize)
     document.removeEventListener('mouseleave', onMouseLeave)

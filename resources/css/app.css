@@ -1,8 +1,5 @@
 @import 'tailwindcss';
 
-/* ── Jost — fallback web si Century Gothic absent (macOS / Linux) ── */
-@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-
 @theme {
     /* Century Gothic comme police principale — Jost en fallback web */
     --font-heading: 'Century Gothic', 'Jost', 'Avant Garde', AppleGothic, sans-serif;
@@ -140,6 +137,10 @@ a, button, [role="button"] {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0);    }
 }
+@keyframes heroSlideUp {
+    from { transform: translateY(8px); }
+    to   { transform: translateY(0);   }
+}
 @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }
@@ -187,12 +188,12 @@ a, button, [role="button"] {
     transform: translateY(0);
 }
 
-/* Hero stagger entrance (déclenché dès le chargement) */
-.hero-anim-1 { animation: fadeUp 550ms var(--ease-out) 0ms   both; }
-.hero-anim-2 { animation: fadeUp 550ms var(--ease-out) 80ms  both; }
-.hero-anim-3 { animation: fadeUp 550ms var(--ease-out) 170ms both; }
-.hero-anim-4 { animation: fadeUp 550ms var(--ease-out) 260ms both; }
-.hero-anim-5 { animation: fadeUp 550ms var(--ease-out) 340ms both; }
+/* Hero stagger entrance — opacity: 1 immédiatement pour ne pas retarder le LCP */
+.hero-anim-1 { animation: heroSlideUp 380ms var(--ease-out) 0ms   both; }
+.hero-anim-2 { animation: heroSlideUp 380ms var(--ease-out) 40ms  both; }
+.hero-anim-3 { animation: heroSlideUp 380ms var(--ease-out) 80ms  both; }
+.hero-anim-4 { animation: heroSlideUp 380ms var(--ease-out) 120ms both; }
+.hero-anim-5 { animation: heroSlideUp 380ms var(--ease-out) 160ms both; }
 
 /* Transitions mobile menu (Vue <Transition name="menu">) */
 .menu-enter-active {
