@@ -99,6 +99,10 @@ Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
 // SEO
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 
+// Agent-discoverable files (fallback when Apache does not serve the static files)
+Route::get('/llms.txt', fn () => response()->file(public_path('llms.txt'), ['Content-Type' => 'text/plain; charset=utf-8']))->name('llms');
+Route::get('/.well-known/mcp/server-card.json', fn () => response()->file(public_path('.well-known/mcp/server-card.json'), ['Content-Type' => 'application/json']))->name('mcp.server-card');
+
 Route::get('/mentions-legales',             fn () => Inertia::render('Legal/MentionsLegales'))->name('mentions-legales');
 Route::get('/politique-de-confidentialite', fn () => Inertia::render('Legal/PolitiqueConfidentialite'))->name('politique-confidentialite');
 

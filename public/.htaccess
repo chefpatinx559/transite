@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Allow .well-known and agent files to bypass front controller
+    RewriteRule ^\.well-known/ - [L]
+    RewriteRule ^llms\.txt$ - [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -40,6 +44,9 @@
 <IfModule mod_headers.c>
     <Files "llms.txt">
         Header set Content-Type "text/plain; charset=utf-8"
+    </Files>
+    <Files "server-card.json">
+        Header set Content-Type "application/json; charset=utf-8"
     </Files>
 </IfModule>
 

@@ -148,6 +148,19 @@
         @endunless
         @inertia
 
+        {{-- Server-rendered nav for non-JS agents and crawlers --}}
+        <nav aria-label="Pages principales" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">
+            <a href="https://netspring.business/a-propos">À propos</a>
+            <a href="https://netspring.business/contact">Contact</a>
+            <a href="https://netspring.business/mentions-legales">Mentions légales</a>
+            <a href="https://netspring.business/politique-de-confidentialite">Politique de confidentialité</a>
+            <a href="https://netspring.business/services">Services</a>
+            <a href="https://netspring.business/boutique">Boutique</a>
+            <a href="https://netspring.business/formations">Formations</a>
+            <a href="https://netspring.business/blog">Blog</a>
+            <a href="https://netspring.business/faq">FAQ</a>
+        </nav>
+
         <!--Start of Tawk.to Script (deferred until user interaction / idle to prevent main-thread blocking)-->
         <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
