@@ -18,6 +18,14 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+        if ($request->is('/') || $request->is('services') || $request->is('boutique') || $request->is('a-propos') || $request->is('contact') || $request->is('faq') || $request->is('formations') || $request->is('blog') || $request->is('importer')) {
+            $currentUrl = url($request->getPathInfo());
+            $response->headers->set('Link', implode(', ', [
+                '<https://netspring.business/llms.txt>; rel="describedby"; type="text/plain"',
+                "<{$currentUrl}>; rel=\"alternate\"; type=\"text/markdown\"",
+            ]));
+        }
+
         return $response;
     }
 }

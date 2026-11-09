@@ -1,0 +1,42 @@
+# NETSPRING
+
+> Pont commercial Chine–Côte d'Ivoire. Importation, sourcing, formations et boutique en ligne.
+
+NETSPRING accompagne les entrepreneurs ivoiriens dans l'importation depuis la Chine : recherche de fournisseurs, négociation, contrôle qualité, transport maritime/aérien, dédouanement et livraison en Côte d'Ivoire. Plus de 500 clients accompagnés depuis 2022.
+
+## Services
+
+- Recherche de fournisseurs fiables en Chine
+- Achat et négociation des prix
+- Contrôle qualité avant expédition
+- Transport maritime et aérien
+- Dédouanement en Côte d'Ivoire
+- Accompagnement personnalisé
+
+## Pages clés
+
+- [Accueil](https://netspring.business/)
+- [Services](https://netspring.business/services)
+- [Boutique](https://netspring.business/boutique)
+- [Formations](https://netspring.business/formations)
+- [Blog](https://netspring.business/blog)
+- [Importer depuis la Chine](https://netspring.business/importer)
+- [À propos](https://netspring.business/a-propos)
+- [Contact](https://netspring.business/contact)
+- [FAQ](https://netspring.business/faq)
+
+## Informations pratiques
+
+- **Localisation** : Bouaké, Côte d'Ivoire
+- **Zones desservies** : Côte d'Ivoire, Chine
+- **Langues** : Français
+- **Horaires** : Lundi–Vendredi 08h00–18h00
+- **WhatsApp** : +225 0712328489
+- **Email** : netspringbusiness@gmail.com
+- **Site** : https://netspring.business
+
+## Pour les agents IA
+
+- API MCP : https://netspring.business/.well-known/mcp/server-card.json
+- Sitemap : https://netspring.business/sitemap.xml
+- Flux Markdown : ajoutez `Accept: text/markdown` à vos requêtes HTTP

@@ -36,6 +36,13 @@
     </FilesMatch>
 </IfModule>
 
+# ── Serve .well-known and agent files with correct types ──
+<IfModule mod_headers.c>
+    <Files "llms.txt">
+        Header set Content-Type "text/plain; charset=utf-8"
+    </Files>
+</IfModule>
+
 # ── Compression Gzip / Deflate ──
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml

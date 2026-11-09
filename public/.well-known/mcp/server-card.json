@@ -1,0 +1,85 @@
+{
+    "name": "NETSPRING",
+    "version": "1.0.0",
+    "description": "Pont commercial Chine–Côte d'Ivoire. Importation, sourcing, formations et boutique en ligne.",
+    "url": "https://netspring.business",
+    "endpoint": "https://netspring.business/api/mcp",
+    "capabilities": {
+        "tools": true,
+        "resources": true,
+        "prompts": false
+    },
+    "tools": [
+        {
+            "name": "search_products",
+            "description": "Search the NETSPRING product catalog by keyword, category or price range.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search keywords"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Product category slug"
+                    },
+                    "max_price": {
+                        "type": "number",
+                        "description": "Maximum price in XOF"
+                    }
+                }
+            }
+        },
+        {
+            "name": "get_quote",
+            "description": "Request an import quote from NETSPRING. Returns a confirmation and estimated response time.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "product_description": {
+                        "type": "string",
+                        "description": "Description of the product to import"
+                    },
+                    "quantity": {
+                        "type": "number",
+                        "description": "Desired quantity"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Contact name"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "WhatsApp or phone number"
+                    }
+                },
+                "required": ["product_description", "name", "phone"]
+            }
+        },
+        {
+            "name": "list_formations",
+            "description": "List available training courses (formations) on import/export and e-commerce.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {}
+            }
+        }
+    ],
+    "resources": [
+        {
+            "name": "llms_txt",
+            "uri": "https://netspring.business/llms.txt",
+            "description": "Plain-text summary of NETSPRING for LLMs"
+        },
+        {
+            "name": "sitemap",
+            "uri": "https://netspring.business/sitemap.xml",
+            "description": "XML sitemap of all public pages"
+        }
+    ],
+    "contact": {
+        "email": "netspringbusiness@gmail.com",
+        "url": "https://netspring.business/contact"
+    }
+}

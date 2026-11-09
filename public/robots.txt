@@ -18,4 +18,6 @@ Allow: /a-propos
 Allow: /contact
 Allow: /faq
 
+Content-Signal: search=yes, ai-train=no
+
 Sitemap: https://netspring.business/sitemap.xml

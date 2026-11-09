@@ -79,3 +79,41 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
         return response()->json($query->get());
     });
 });
+
+// ──────────────────────────────────────────────
+// PUBLIC MCP — agent-facing endpoints
+// ──────────────────────────────────────────────
+Route::get('/products', function (\Illuminate\Http\Request $request) {
+    $query = \App\Models\Product::where('is_published', true);
+    if ($search = $request->input('search')) {
+        $query->where('name', 'like', "%{$search}%");
+    }
+    if ($category = $request->input('category')) {
+        $query->whereHas('category', fn ($q) => $q->where('slug', $category));
+    }
+    if ($maxPrice = $request->input('max_price')) {
+        $query->where('price', '<=', (int) $maxPrice);
+    }
+    return response()->json(
+        $query->orderByDesc('created_at')
+            ->limit(20)
+            ->get(['id', 'name', 'slug', 'short_description', 'price'])
+    );
+})->middleware('throttle:60,1');
+
+Route::get('/formations', function () {
+    return response()->json(
+        \App\Models\Formation::where('is_published', true)
+            ->orderByDesc('created_at')
+            ->get(['id', 'title', 'slug', 'excerpt', 'price', 'start_date'])
+    );
+})->middleware('throttle:60,1');
+
+Route::post('/mcp', function (\Illuminate\Http\Request $request) {
+    return response()->json([
+        'name' => 'NETSPRING',
+        'version' => '1.0.0',
+        'status' => 'ok',
+        'message' => 'Use the tools listed in /.well-known/mcp/server-card.json',
+    ]);
+})->middleware('throttle:30,1');

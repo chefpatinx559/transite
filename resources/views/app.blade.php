@@ -4,6 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        {{-- Google Tag Manager --}}
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5TXQTH8M"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        </script>
+
         @php
             $seo = \App\Services\SeoService::forPage($page);
         @endphp
@@ -33,6 +41,12 @@
         <meta name="twitter:description" content="{{ $seo['og_description'] }}">
         <meta name="twitter:image" content="{{ $seo['og_image'] }}">
         @endunless
+
+        {{-- Agent-discoverable about / contact / legal links --}}
+        <link rel="about" href="https://netspring.business/a-propos">
+        <link rel="contact" href="https://netspring.business/contact">
+        <link rel="terms-of-service" href="https://netspring.business/mentions-legales">
+        <link rel="privacy-policy" href="https://netspring.business/politique-de-confidentialite">
 
         {{-- Favicons --}}
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
@@ -83,12 +97,55 @@
                 "closes": "18:00"
             },
             "sameAs": [
-                "https://wa.me/2250712328489"
+                "https://wa.me/2250712328489",
+                "https://www.facebook.com/profile.php?id=61574430440509",
+                "https://www.tiktok.com/@@netspringbusiness"
             ]
+        }
+        </script>
+
+        {{-- Schema.org WebSite with SearchAction --}}
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "WebSite",
+            "name": "NETSPRING",
+            "url": "https://netspring.business",
+            "description": "Plateforme d'importation Chine–Côte d'Ivoire : sourcing, transport, formations et boutique en ligne.",
+            "inLanguage": "fr",
+            "potentialAction": {
+                "@@type": "SearchAction",
+                "target": "https://netspring.business/boutique?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        {{-- Schema.org Service --}}
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "Service",
+            "serviceType": "Import-export facilitation",
+            "name": "Importation Chine–Côte d'Ivoire",
+            "description": "Accompagnement complet pour l'importation depuis la Chine : recherche de fournisseurs, négociation, contrôle qualité, transport maritime/aérien et dédouanement en Côte d'Ivoire.",
+            "provider": {
+                "@@type": "LocalBusiness",
+                "name": "NETSPRING",
+                "url": "https://netspring.business"
+            },
+            "areaServed": [
+                { "@@type": "Country", "name": "Côte d'Ivoire" },
+                { "@@type": "Country", "name": "China" }
+            ],
+            "url": "https://netspring.business/services"
         }
         </script>
     </head>
     <body class="font-sans antialiased">
+        @unless($seo['noindex'])
+        <h1 id="ssr-heading" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">{{ $seo['title'] }}</h1>
+        @endunless
         @inertia
 
         <!--Start of Tawk.to Script (deferred until user interaction / idle to prevent main-thread blocking)-->
